@@ -1,19 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { INTRO_PULSE_DURATION } from "@/lib/constants";
 
 const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3;
-
-const WORK_CATEGORIES = [
-  { label: "Design", href: "/work/design" },
-  { label: "Motion", href: "/work/motion" },
-  { label: "Illustration", href: "/work/illustration" },
-  { label: "Experiments", href: "/work/experiments" },
-];
-
-const MotionLink = motion.create(Link);
 
 export function LandingOverlay() {
   return (
@@ -35,34 +25,6 @@ export function LandingOverlay() {
               <br />
               so others don&apos;t have to.
             </motion.h1>
-
-            {/* Work category links */}
-            <div
-              className="pointer-events-auto flex flex-wrap"
-              style={{ marginTop: "var(--space-8)", gap: "var(--space-6)" }}
-            >
-              {WORK_CATEGORIES.map((cat, i) => (
-                <MotionLink
-                  key={cat.label}
-                  href={cat.href}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: ENTRANCE_DELAY + 0.6 + i * 0.1,
-                    ease: "easeOut",
-                  }}
-                  className="font-[family-name:var(--font-mono)] uppercase text-brown-400 hover:text-accent-orange transition-colors"
-                  style={{
-                    fontSize: "var(--text-xs)",
-                    letterSpacing: "0.12em",
-                    transitionDuration: "var(--duration-normal)",
-                  }}
-                >
-                  {cat.label}
-                </MotionLink>
-              ))}
-            </div>
           </div>
 
           <motion.p

@@ -14,7 +14,7 @@ export const ACCENT_COLOR: [number, number, number] = [232, 114, 42]; // #E8722A
 
 // === Lines ===
 
-export const LINE_COUNT = 120;
+export const LINE_COUNT = 60;
 export const MAX_THICKNESS = 5;
 
 // === Velocity → Radius mapping ===

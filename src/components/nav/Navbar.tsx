@@ -96,7 +96,7 @@ export function Navbar() {
         >
           <Link
             href="/"
-            className="text-brown-100 hover:text-accent-orange transition-colors"
+            className="text-brown-100 hover:text-accent-orange transition-colors font-semibold"
             style={{
               fontSize: "var(--text-sm)",
               letterSpacing: "0.2em",
@@ -110,14 +110,14 @@ export function Navbar() {
           <div className="hidden md:flex items-center" style={{ gap: "var(--space-10)" }}>
             <Link
               href="/work"
-              className="text-brown-100 hover:text-accent-orange transition-colors"
+              className="text-brown-100 hover:text-accent-orange transition-colors font-medium"
               style={{ transitionDuration: "var(--duration-normal)" }}
             >
               Work
             </Link>
             <Link
               href="/about"
-              className="text-brown-100 hover:text-accent-orange transition-colors"
+              className="text-brown-100 hover:text-accent-orange transition-colors font-medium"
               style={{ transitionDuration: "var(--duration-normal)" }}
             >
               About

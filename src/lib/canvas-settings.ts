@@ -264,7 +264,7 @@ export function applyThemeVariables(theme: ThemeId, mode: ModeId): void {
 // ---------------------------------------------------------------------------
 
 export const DEFAULT_SETTINGS: CanvasSettings = {
-  lineCount: 120,
+  lineCount: 60,
   maxThickness: 5,
   radiusMultiplier: 1.0,
   velocitySmoothing: 0.35,
