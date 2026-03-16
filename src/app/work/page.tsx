@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { WORK_CATEGORIES } from "@/lib/work-data";
+import { PROJECTS } from "@/lib/work-data";
 
 export default function WorkPage() {
   return (
@@ -16,141 +16,168 @@ export default function WorkPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{ marginBottom: "var(--space-12)" }}
+          style={{ marginBottom: "var(--space-16)" }}
         >
-          <p
-            className="font-[family-name:var(--font-mono)] uppercase text-brown-400"
-            style={{
-              fontSize: "var(--text-xs)",
-              letterSpacing: "0.16em",
-              marginBottom: "var(--space-4)",
-            }}
-          >
-            Work
-          </p>
           <h1
             className="font-[family-name:var(--font-display)] text-foreground tracking-tight"
             style={{ fontSize: "clamp(2rem, 1.5rem + 1.6vw, 3rem)" }}
           >
-            Case studies & projects
+            Selected work
           </h1>
         </motion.header>
 
-        <div className="border-t border-brown-500/15">
-          {WORK_CATEGORIES.map((category, i) => (
+        {/* Project list */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--space-20)",
+          }}
+        >
+          {PROJECTS.map((project, i) => (
             <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 20 }}
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.6,
+                duration: 0.7,
                 delay: 0.15 * (i + 1),
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="border-b border-brown-500/15"
-              style={{ padding: "var(--space-10) 0" }}
             >
-              <div
-                className="flex flex-col md:flex-row md:items-start md:justify-between"
-                style={{ gap: "var(--space-6)" }}
+              <Link
+                href={project.href}
+                className="group block"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                <div style={{ flex: 1 }}>
-                  <p
-                    className="font-[family-name:var(--font-mono)] uppercase text-accent-orange"
-                    style={{
-                      fontSize: "var(--text-xs)",
-                      letterSpacing: "0.12em",
-                      marginBottom: "var(--space-3)",
-                    }}
+                <div
+                  className="flex flex-col md:flex-row items-start"
+                  style={{ gap: "var(--space-10)" }}
+                >
+                  {/* Left — Text */}
+                  <div
+                    className="flex-1 flex flex-col justify-center"
+                    style={{ minWidth: 0, paddingTop: "var(--space-4)" }}
                   >
-                    {category.label}
-                  </p>
-                  <p
-                    className="text-brown-300 leading-relaxed"
-                    style={{
-                      fontSize: "var(--text-sm)",
-                      maxWidth: "560px",
-                      marginBottom: "var(--space-4)",
-                    }}
-                  >
-                    {category.description}
-                  </p>
-                  {category.items.length > 0 && (
+                    <h2
+                      className="font-[family-name:var(--font-display)] text-foreground tracking-tight"
+                      style={{
+                        fontSize: "clamp(1.5rem, 1.2rem + 1vw, 2.25rem)",
+                        marginBottom: "var(--space-4)",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {project.title}
+                    </h2>
+
+                    <p
+                      className="text-brown-300 leading-relaxed"
+                      style={{
+                        fontSize: "var(--text-base)",
+                        maxWidth: "480px",
+                        marginBottom: "var(--space-6)",
+                      }}
+                    >
+                      {project.description}
+                    </p>
+
+                    {/* Tags */}
                     <div
                       className="flex flex-wrap"
-                      style={{ gap: "var(--space-2)" }}
+                      style={{ gap: "var(--space-2)", marginBottom: "var(--space-6)" }}
                     >
-                      {category.items.map((item) =>
-                        item.href ? (
-                          <Link
-                            key={item.id}
-                            href={item.href}
-                            className="font-[family-name:var(--font-mono)] uppercase text-brown-400 hover:text-accent-orange transition-colors"
-                            style={{
-                              fontSize: "10px",
-                              letterSpacing: "0.08em",
-                              padding: "var(--space-1) var(--space-3)",
-                              border: "1px solid var(--border-subtle)",
-                              borderRadius: "var(--radius-sm)",
-                              textDecoration: "none",
-                              transitionDuration: "var(--duration-normal)",
-                            }}
-                          >
-                            {item.title}
-                          </Link>
-                        ) : (
-                          <span
-                            key={item.id}
-                            className="font-[family-name:var(--font-mono)] uppercase text-brown-400"
-                            style={{
-                              fontSize: "10px",
-                              letterSpacing: "0.08em",
-                              padding: "var(--space-1) var(--space-3)",
-                              border: "1px solid var(--border-subtle)",
-                              borderRadius: "var(--radius-sm)",
-                            }}
-                          >
-                            {item.title}
-                          </span>
-                        )
-                      )}
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="font-[family-name:var(--font-mono)] uppercase text-brown-400"
+                          style={{
+                            fontSize: "10px",
+                            letterSpacing: "0.08em",
+                            padding: "var(--space-1) var(--space-3)",
+                            border: "1px solid var(--border-subtle)",
+                            borderRadius: "var(--radius-full, 9999px)",
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                  )}
-                  {category.placeholder && (
+
+                    {/* CTA */}
                     <span
-                      className="font-[family-name:var(--font-mono)] uppercase text-brown-500"
+                      className="inline-flex items-center font-[family-name:var(--font-mono)] uppercase text-brown-400 group-hover:text-accent-orange transition-colors"
                       style={{
                         fontSize: "var(--text-xs)",
                         letterSpacing: "0.08em",
+                        gap: "var(--space-2)",
+                        transitionDuration: "var(--duration-normal)",
                       }}
                     >
-                      Coming soon
+                      View project
+                      <svg
+                        width="14"
+                        height="10"
+                        viewBox="0 0 14 10"
+                        fill="none"
+                        className="transition-transform group-hover:translate-x-1"
+                        style={{ transitionDuration: "var(--duration-normal)" }}
+                      >
+                        <path
+                          d="M1 5H12M9 1L13 5L9 9"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                     </span>
-                  )}
-                </div>
+                  </div>
 
-                <Link
-                  href={category.href}
-                  className="inline-flex items-center font-[family-name:var(--font-mono)] uppercase text-brown-400 hover:text-accent-orange transition-colors shrink-0"
-                  style={{
-                    fontSize: "var(--text-xs)",
-                    letterSpacing: "0.08em",
-                    gap: "var(--space-2)",
-                    transitionDuration: "var(--duration-normal)",
-                  }}
-                >
-                  View all
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                    <path
-                      d="M1 4H10M7 1L10.5 4L7 7"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
-              </div>
+                  {/* Right — Thumbnail */}
+                  <div
+                    className="w-full md:w-[50%] shrink-0 overflow-hidden"
+                    style={{
+                      borderRadius: "var(--radius-lg, 12px)",
+                      aspectRatio: "4 / 3",
+                      backgroundColor: "var(--brown-600, #C4B0A0)",
+                      position: "relative",
+                    }}
+                  >
+                    {project.thumbnail ? (
+                      <img
+                        src={project.thumbnail}
+                        alt={`${project.title} preview`}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-[1.03]"
+                        style={{
+                          transitionDuration: "0.6s",
+                          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                        onError={(e) => {
+                          // Hide broken image, show placeholder bg
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    ) : null}
+
+                    {/* Placeholder overlay when no image */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <span
+                        className="font-[family-name:var(--font-mono)] uppercase text-brown-500"
+                        style={{
+                          fontSize: "var(--text-xs)",
+                          letterSpacing: "0.12em",
+                          opacity: 0.5,
+                        }}
+                      >
+                        {project.title}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
