@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EYQ Agent Builder — All Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0D0D0D;
+    color: #F5F5F5;
+    min-height: 100vh;
+    padding: 60px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .ey-mark {
+    background: #FFE600;
+    color: #000;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 5px 9px;
+    border-radius: 5px;
+    letter-spacing: 0.05em;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .subtitle {
+    font-size: 16px;
+    color: #999;
+    margin-bottom: 48px;
+    line-height: 1.5;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    margin-top: 40px;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  a.card {
+    display: block;
+    background: #1A1A1A;
+    border: 1px solid #2A2A2A;
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    color: #F5F5F5;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  a.card:hover {
+    border-color: rgba(255,230,0,0.3);
+    background: #1E1E1E;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .card-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,230,0,0.1);
+    color: #FFE600;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.5;
+  }
+  .card-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 12px;
+  }
+  .tag-wizard { background: rgba(59,130,246,0.1); color: #3B82F6; }
+  .tag-nav { background: rgba(168,85,247,0.1); color: #A855F7; }
+  .tag-eval { background: rgba(34,197,94,0.1); color: #22C55E; }
+  .tag-dash { background: rgba(255,230,0,0.1); color: #FFE600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="ey-mark">EY</span>
+  <h1>Agent Builder — Case Study Screens</h1>
+</div>
+<p class="subtitle">8 high-fidelity mockup screens covering all 4 solutions. Click any card to view.</p>
+
+<div class="section-label">Solution 1 — Agent Creation Wizard</div>
+<div class="grid">
+  <a class="card" href="agent-creation-start.html">
+    <div class="card-num">1</div>
+    <div class="card-title">Create Agent — Step 1</div>
+    <div class="card-desc">Pattern selection with RAG, Text-to-SQL, Conversational, and Multi-Agent cards. Simplified entry point showing the 2-minute creation flow.</div>
+    <span class="card-tag tag-wizard">Wizard</span>
+  </a>
+  <a class="card" href="agent-creation-wizard-step2.html">
+    <div class="card-num">2</div>
+    <div class="card-title">Knowledge Sources — Step 2</div>
+    <div class="card-desc">Document upload with drag-and-drop zone, source type tabs (Documents, Database, API, SharePoint), and uploaded file chips.</div>
+    <span class="card-tag tag-wizard">Wizard</span>
+  </a>
+  <a class="card" href="agent-creation-success.html">
+    <div class="card-num">3</div>
+    <div class="card-title">Agent Created — Success</div>
+    <div class="card-desc">Confirmation state with agent summary card and CTAs to test the agent or open the evaluation portal.</div>
+    <span class="card-tag tag-wizard">Wizard</span>
+  </a>
+</div>
+
+<div class="section-label">Solution 2 — Context-Aware Navigation</div>
+<div class="grid">
+  <a class="card" href="navigation-context-switcher.html">
+    <div class="card-num">4</div>
+    <div class="card-title">Quick Switcher</div>
+    <div class="card-desc">Global context menu showing 3 tenants with color-coded dots, nested workspaces, and keyboard shortcuts. Full app shell with dimmed background.</div>
+    <span class="card-tag tag-nav">Navigation</span>
+  </a>
+</div>
+
+<div class="section-label">Solution 3 — Evaluation Portal</div>
+<div class="grid">
+  <a class="card" href="evaluation-dashboard.html">
+    <div class="card-num">5</div>
+    <div class="card-title">Evaluation Dashboard</div>
+    <div class="card-desc">Agent list with color-coded scores, version badges, status pills (Tested, Needs Review, Untested), and filter bar.</div>
+    <span class="card-tag tag-eval">Evaluation</span>
+  </a>
+  <a class="card" href="evaluation-bulk-testing.html">
+    <div class="card-num">6</div>
+    <div class="card-title">Bulk Q&A Testing</div>
+    <div class="card-desc">Results table with confidence scores, source citations, match indicators. Knowledge sources panel with swap/remove controls.</div>
+    <span class="card-tag tag-eval">Evaluation</span>
+  </a>
+  <a class="card" href="evaluation-version-comparison.html">
+    <div class="card-num">7</div>
+    <div class="card-title">Version Comparison</div>
+    <div class="card-desc">v2.1 vs v2.0 with +14% delta, score progression chart, and question-level comparison table with trend indicators.</div>
+    <span class="card-tag tag-eval">Evaluation</span>
+  </a>
+</div>
+
+<div class="section-label">Solution 4 — Dashboard & Multi-Tenant</div>
+<div class="grid">
+  <a class="card" href="agent-home-dashboard.html">
+    <div class="card-num">8</div>
+    <div class="card-title">Agent Home Dashboard</div>
+    <div class="card-desc">Workspace overview with agent cards grid (status badges, pattern types), member avatars, and recent activity feed.</div>
+    <span class="card-tag tag-dash">Dashboard</span>
+  </a>
+</div>
+
+</body>
+</html>

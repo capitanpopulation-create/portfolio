@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EYQ Agent Builder — Agent Created</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0D0D0D;
+    --card: #1A1A1A;
+    --border: #2A2A2A;
+    --text: #F5F5F5;
+    --text-secondary: #999999;
+    --text-muted: #666666;
+    --yellow: #FFE600;
+    --yellow-dim: rgba(255, 230, 0, 0.06);
+    --green: #22C55E;
+    --green-dim: rgba(34, 197, 94, 0.08);
+  }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(13,13,13,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    z-index: 100;
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .topbar-logo .ey-mark {
+    background: var(--yellow);
+    color: #000;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 4px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Progress - all done */
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 56px;
+    width: 100%;
+    max-width: 640px;
+  }
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--green);
+  }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .progress-line {
+    flex: 1;
+    height: 1px;
+    background: var(--green);
+  }
+
+  /* Success card */
+  .success-container {
+    text-align: center;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .success-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    margin-bottom: 28px;
+  }
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    border: 2px solid rgba(34, 197, 94, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Decorative rings */
+  .success-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(34, 197, 94, 0.08);
+  }
+  .success-ring-1 {
+    width: 104px; height: 104px;
+    top: -16px; left: -16px;
+  }
+  .success-ring-2 {
+    width: 136px; height: 136px;
+    top: -32px; left: -32px;
+  }
+  /* Decorative dots */
+  .dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--green);
+    opacity: 0.4;
+  }
+  .dot-1 { top: -20px; right: -28px; }
+  .dot-2 { top: 10px; right: -40px; width: 3px; height: 3px; opacity: 0.25; }
+  .dot-3 { bottom: -10px; left: -36px; width: 5px; height: 5px; opacity: 0.3; }
+  .dot-4 { top: -8px; left: -30px; width: 3px; height: 3px; opacity: 0.2; }
+  .dot-5 { bottom: -24px; right: -20px; width: 4px; height: 4px; opacity: 0.35; }
+
+  .success-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .success-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  /* Summary card */
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: left;
+    margin-bottom: 32px;
+  }
+  .summary-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--yellow-dim);
+    border: 1px solid rgba(255,230,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .summary-agent-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .summary-agent-status {
+    font-size: 12px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .summary-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .summary-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .summary-value .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(59,130,246,0.12);
+    color: #3B82F6;
+  }
+
+  /* CTAs */
+  .cta-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .btn {
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: var(--yellow);
+    color: #000;
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <span class="ey-mark">EY</span>
+    Agent Builder
+  </div>
+</div>
+
+<div class="progress-container">
+  <div class="progress-step">
+    <div class="step-num"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    Configure
+  </div>
+  <div class="progress-line"></div>
+  <div class="progress-step">
+    <div class="step-num"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    Knowledge
+  </div>
+  <div class="progress-line"></div>
+  <div class="progress-step">
+    <div class="step-num"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    Review
+  </div>
+</div>
+
+<div class="success-container">
+  <div class="success-icon-wrapper">
+    <div class="success-ring success-ring-2"></div>
+    <div class="success-ring success-ring-1"></div>
+    <div class="success-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="dot dot-1"></div>
+    <div class="dot dot-2"></div>
+    <div class="dot dot-3"></div>
+    <div class="dot dot-4"></div>
+    <div class="dot dot-5"></div>
+  </div>
+
+  <h1 class="success-title">Agent created successfully</h1>
+  <p class="success-subtitle">Your agent is ready to test. Run evaluations to validate performance before deploying.</p>
+
+  <div class="summary-card">
+    <div class="summary-header">
+      <div class="summary-avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFE600" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div>
+        <div class="summary-agent-name">Vendor Risk Analyzer</div>
+        <div class="summary-agent-status">
+          <span class="status-dot"></span>
+          Ready to test
+        </div>
+      </div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <span class="summary-label">Pattern</span>
+        <span class="summary-value"><span class="badge">RAG</span></span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Knowledge Sources</span>
+        <span class="summary-value">3 documents</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Workspace</span>
+        <span class="summary-value">Vendor Management</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Created</span>
+        <span class="summary-value">Just now</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-group">
+    <button class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Test Agent
+    </button>
+    <button class="btn btn-outline">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
+      Open Evaluation Portal
+    </button>
+  </div>
+</div>
+
+</body>
+</html>

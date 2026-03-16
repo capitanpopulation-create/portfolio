@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo view gsd-build/get-shit-done --json name,description)",
+      "WebFetch(domain:github.com)",
+      "Bash(npx get-shit-done-cc@latest --claude --global)",
+      "Bash(brew install node)",
+      "Bash(/opt/homebrew/bin/brew install node)",
+      "Bash(/usr/local/bin/brew install node)",
+      "Bash(git clone https://github.com/gsd-build/get-shit-done.git /tmp/get-shit-done)",
+      "Bash(bash)",
+      "mcp__Claude_Preview__preview_start",
+      "WebFetch(domain:www.polpissystems.com)",
+      "Bash(ls -la /Users/gabo/Portfolio/postcss.config.*)",
+      "Bash(ls -la /Users/gabo/Portfolio/tailwind.config.*)",
+      "WebFetch(domain:poppycreativeagency.com)",
+      "WebFetch(domain:poppydesignstudio.com)",
+      "WebFetch(domain:poppydesign.co)",
+      "WebFetch(domain:getpoppy.ai)",
+      "Bash(npx next build)",
+      "WebFetch(domain:www.figma.com)"
+    ]
+  }
+}
