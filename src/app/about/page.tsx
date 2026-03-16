@@ -127,7 +127,26 @@ export default function AboutPage() {
           </motion.section>
         </div>
 
-        <div style={{ paddingBottom: "var(--space-20)" }} />
+        {/* Credits */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          style={{ padding: "var(--space-10) 0 var(--space-20)" }}
+        >
+          <div
+            className="text-brown-400 font-[family-name:var(--font-mono)]"
+            style={{
+              fontSize: "var(--text-xs)",
+              letterSpacing: "0.04em",
+              lineHeight: 1.8,
+            }}
+          >
+            <p>This website has been made entirely using Claude Code.</p>
+            <p>Done in a span of two weeks.</p>
+            <p className="italic text-brown-500">No agents were harmed in the creation of this website.</p>
+          </div>
+        </motion.section>
       </div>
     </main>
   );
