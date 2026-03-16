@@ -27,13 +27,13 @@ export const PROJECTS: WorkProject[] = [
     thumbnail: "/images/work/agent-builder-thumb.png",
   },
   {
-    id: "rb-platform",
-    title: "RB Platform",
+    id: "erp-integration",
+    title: "ERP Integration Tool",
     description:
       "Designing a seamless interface for connecting enterprise resource planning systems — simplifying complex data flows into clear, actionable workflows.",
     tags: ["Product Design", "Enterprise", "B2B"],
-    href: "/work/rb-platform",
-    thumbnail: "/images/work/rb-platform-thumb.png",
+    href: "/work/erp-integration",
+    thumbnail: "/images/work/erp-integration-thumb.png",
   },
 ];
 

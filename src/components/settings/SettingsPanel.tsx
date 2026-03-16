@@ -6,12 +6,14 @@ import {
   type CanvasSettings,
   type ThemeId,
   type ModeId,
+  type ShapeId,
   DEFAULT_SETTINGS,
   THEME_ACCENT_HEX,
   resetSettings,
   applyThemeVariables,
 } from "@/lib/canvas-settings";
 import { Slider } from "./Slider";
+import { ShapeSelector } from "./ShapeSelector";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -82,117 +84,215 @@ function ThemeToggle({
 }
 
 // ---------------------------------------------------------------------------
-// Light / Dark Mode Toggle
+// Lightbulb Toggle (dark/light mode)
 // ---------------------------------------------------------------------------
 
-function ModeToggle({
-  active,
+function LightbulbToggle({
+  mode,
   onChange,
 }: {
-  active: ModeId;
+  mode: ModeId;
   onChange: (m: ModeId) => void;
 }) {
+  const isLight = mode === "light";
+
   return (
-    <div
-      className="relative flex"
+    <motion.button
+      onClick={() => onChange(isLight ? "dark" : "light")}
+      className="flex items-center justify-center transition-colors"
       style={{
-        border: "1px solid var(--border-interactive)",
+        width: 36,
+        height: 36,
         borderRadius: "var(--radius-md)",
-        padding: 2,
-        gap: 2,
+        border: "1px solid var(--border-interactive)",
+        color: isLight ? "var(--accent-orange)" : "var(--brown-400)",
+        backgroundColor: isLight ? "rgba(232, 114, 42, 0.1)" : "transparent",
+        transitionDuration: "var(--duration-normal)",
+        position: "relative",
       }}
+      whileTap={{ scale: 0.9 }}
+      aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
+      title={`Switch to ${isLight ? "dark" : "light"} mode`}
     >
-      {(["dark", "light"] as ModeId[]).map((m) => (
-        <button
-          key={m}
-          onClick={() => onChange(m)}
-          className="relative flex-1 flex items-center justify-center font-[family-name:var(--font-mono)] uppercase text-center transition-colors"
+      {/* Glow ring in light mode */}
+      {isLight && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="absolute inset-0"
           style={{
-            fontSize: "var(--text-xs)",
-            letterSpacing: "0.08em",
-            padding: "var(--space-2) var(--space-3)",
-            borderRadius: "calc(var(--radius-md) - 2px)",
-            color: active === m ? "var(--foreground)" : "var(--brown-400)",
-            position: "relative",
-            zIndex: 1,
-            transitionDuration: "var(--duration-normal)",
-            gap: "var(--space-2)",
+            borderRadius: "var(--radius-md)",
+            boxShadow: "0 0 12px rgba(232, 114, 42, 0.3)",
           }}
-        >
-          {active === m && (
-            <motion.div
-              layoutId="mode-pill"
-              className="absolute inset-0"
-              style={{
-                backgroundColor: "var(--border-interactive)",
-                borderRadius: "calc(var(--radius-md) - 2px)",
-                zIndex: -1,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            />
-          )}
-          {m === "light" ? (
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.2"/>
-              <path d="M8 1.5V3M8 13V14.5M1.5 8H3M13 8H14.5M3.4 3.4L4.5 4.5M11.5 11.5L12.6 12.6M3.4 12.6L4.5 11.5M11.5 4.5L12.6 3.4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-            </svg>
-          ) : (
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M13.5 9.5A5.5 5.5 0 116.5 2.5a4.5 4.5 0 007 7z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          )}
-          {m}
-        </button>
-      ))}
-    </div>
+        />
+      )}
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        {/* Bulb body */}
+        <path
+          d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill={isLight ? "currentColor" : "none"}
+          fillOpacity={isLight ? 0.2 : 0}
+        />
+        {/* Rays — only in light mode */}
+        {isLight && (
+          <motion.g
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <line x1="12" y1="0" x2="12" y2="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="4.2" y1="4.2" x2="4.9" y2="4.9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="0" y1="12" x2="1" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="19.8" y1="4.2" x2="19.1" y2="4.9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="24" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </motion.g>
+        )}
+      </svg>
+    </motion.button>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Trigger Button — right-center edge of viewport
+// Abstract Creature Trigger — bottom-right corner
 // ---------------------------------------------------------------------------
 
-function TriggerButton({ onClick }: { onClick: () => void }) {
+function CreatureTrigger({
+  onClick,
+  accent,
+  isOpen,
+}: {
+  onClick: () => void;
+  accent: string;
+  isOpen: boolean;
+}) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className="fixed z-[55] flex items-center justify-center transition-colors hover:border-brown-400/40"
+      className="fixed z-[55] flex items-center justify-center"
       style={{
-        top: "50%",
-        right: 0,
-        transform: "translateY(-50%)",
-        width: 28,
-        height: 52,
+        bottom: "var(--space-6)",
+        right: "var(--space-6)",
+        width: 48,
+        height: 48,
         backgroundColor: "var(--surface-elevated)",
         backdropFilter: "blur(8px)",
         WebkitBackdropFilter: "blur(8px)",
         border: "1px solid var(--border-interactive)",
-        borderRight: "none",
-        borderRadius: "var(--radius-md) 0 0 var(--radius-md)",
+        borderRadius: "var(--radius-full, 9999px)",
         transitionDuration: "var(--duration-normal)",
+        cursor: "pointer",
       }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      animate={isOpen ? { rotate: 180 } : { rotate: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
       aria-label="Open canvas settings"
     >
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 18 18"
-        fill="none"
-        className="text-brown-300"
-      >
-        <line x1="5" y1="3" x2="5" y2="15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="9" y1="3" x2="9" y2="15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="13" y1="3" x2="13" y2="15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <circle cx="5" cy="7" r="2" fill="var(--background)" stroke="currentColor" strokeWidth="1.2" />
-        <circle cx="9" cy="12" r="2" fill="var(--background)" stroke="currentColor" strokeWidth="1.2" />
-        <circle cx="13" cy="5" r="2" fill="var(--background)" stroke="currentColor" strokeWidth="1.2" />
+      {/* Abstract creature: overlapping geometric shapes */}
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        {/* Body — center circle */}
+        <motion.circle
+          cx="12"
+          cy="12"
+          r="4"
+          stroke={accent}
+          strokeWidth="1.3"
+          fill="none"
+          animate={{ r: isOpen ? 5 : 4 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+        {/* Left eye */}
+        <motion.circle
+          cx="10"
+          cy="11"
+          r="1"
+          fill={accent}
+          animate={{ r: isOpen ? 0.5 : 1, cy: isOpen ? 10 : 11 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+        {/* Right eye */}
+        <motion.circle
+          cx="14"
+          cy="11"
+          r="1"
+          fill={accent}
+          animate={{ r: isOpen ? 0.5 : 1, cy: isOpen ? 10 : 11 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+        {/* Top antenna — line */}
+        <motion.line
+          x1="12"
+          y1="8"
+          x2="12"
+          y2="4"
+          stroke={accent}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          animate={{ y2: isOpen ? 3 : 4 }}
+        />
+        {/* Antenna tip */}
+        <motion.circle
+          cx="12"
+          cy="4"
+          r="1.2"
+          fill="none"
+          stroke={accent}
+          strokeWidth="1"
+          animate={{ cy: isOpen ? 3 : 4 }}
+        />
+        {/* Left arm — small diamond */}
+        <motion.rect
+          x="4"
+          y="11"
+          width="3"
+          height="3"
+          stroke={accent}
+          strokeWidth="1"
+          fill="none"
+          transform="rotate(45 5.5 12.5)"
+          animate={{ opacity: isOpen ? 1 : 0.6 }}
+        />
+        {/* Right arm — small triangle */}
+        <motion.path
+          d="M19 10.5L21 13L17 13Z"
+          stroke={accent}
+          strokeWidth="1"
+          fill="none"
+          strokeLinejoin="round"
+          animate={{ opacity: isOpen ? 1 : 0.6 }}
+        />
+        {/* Feet — two small lines */}
+        <motion.line
+          x1="10"
+          y1="16"
+          x2="10"
+          y2="19"
+          stroke={accent}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          animate={{ y2: isOpen ? 20 : 19 }}
+        />
+        <motion.line
+          x1="14"
+          y1="16"
+          x2="14"
+          y2="19"
+          stroke={accent}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          animate={{ y2: isOpen ? 20 : 19 }}
+        />
       </svg>
-    </button>
+    </motion.button>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Settings Panel (main) — compact slide-out
+// Settings Panel (main) — bottom-right popover
 // ---------------------------------------------------------------------------
 
 export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
@@ -275,7 +375,11 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
 
   return (
     <>
-      {!open && <TriggerButton onClick={() => setOpen(true)} />}
+      <CreatureTrigger
+        onClick={() => setOpen(!open)}
+        accent={accent}
+        isOpen={open}
+      />
 
       <AnimatePresence>
         {open && (
@@ -285,24 +389,23 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25 }}
               className="fixed inset-0 z-[59]"
-              style={{ backgroundColor: "rgba(0,0,0,0.2)" }}
+              style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
               onClick={() => setOpen(false)}
             />
 
-            {/* Panel — compact, auto-height */}
+            {/* Panel — compact popover above creature */}
             <motion.div
-              initial={{ x: "100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "100%", opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ y: 20, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 20, opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="fixed z-[60] pointer-events-auto"
               style={{
-                top: "50%",
-                right: "var(--space-4)",
-                transform: "translateY(-50%)",
-                width: "min(320px, calc(100vw - 32px))",
+                bottom: "calc(var(--space-6) + 60px)",
+                right: "var(--space-6)",
+                width: "min(300px, calc(100vw - 48px))",
                 backgroundColor: "var(--surface-elevated)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
@@ -314,11 +417,11 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
               {/* Header */}
               <div
                 style={{
-                  padding: "var(--space-4) var(--space-5)",
+                  padding: "var(--space-3) var(--space-4)",
                   borderBottom: "1px solid var(--border-muted)",
                 }}
               >
-                <div className="flex items-center justify-between" style={{ marginBottom: "var(--space-4)" }}>
+                <div className="flex items-center justify-between" style={{ marginBottom: "var(--space-3)" }}>
                   <span
                     className="font-[family-name:var(--font-mono)] uppercase text-brown-300"
                     style={{ fontSize: "var(--text-xs)", letterSpacing: "0.12em" }}
@@ -331,22 +434,55 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
                     style={{ transitionDuration: "var(--duration-normal)" }}
                     aria-label="Close settings"
                   >
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
                       <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                     </svg>
                   </button>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                  <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
-                  <ModeToggle active={s.mode} onChange={handleModeChange} />
-                </div>
+                {/* Theme selector */}
+                <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
               </div>
 
-              {/* Lines control */}
-              <div style={{ padding: "var(--space-4) var(--space-5)" }}>
+              {/* Controls */}
+              <div
+                style={{
+                  padding: "var(--space-3) var(--space-4)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-3)",
+                }}
+              >
+                {/* Shape label + selector */}
+                <div>
+                  <span
+                    className="font-[family-name:var(--font-mono)] uppercase text-brown-400"
+                    style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", display: "block" }}
+                  >
+                    Shape
+                  </span>
+                  <ShapeSelector
+                    active={s.shape}
+                    accent={accent}
+                    onChange={(shape: ShapeId) => update("shape", shape)}
+                  />
+                </div>
+
+                {/* Angle slider */}
                 <Slider
-                  label="Lines"
+                  label="Angle"
+                  value={s.angle}
+                  min={0}
+                  max={360}
+                  step={15}
+                  unit="°"
+                  accentColor={accent}
+                  onChange={(v) => update("angle", v)}
+                />
+
+                {/* Line count slider */}
+                <Slider
+                  label="Count"
                   value={s.lineCount}
                   min={20}
                   max={100}
@@ -357,15 +493,21 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
                 />
               </div>
 
-              {/* Footer */}
+              {/* Footer — lightbulb + reset */}
               <div
                 style={{
-                  padding: "0 var(--space-5) var(--space-4)",
+                  padding: "var(--space-3) var(--space-4)",
+                  borderTop: "1px solid var(--border-muted)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--space-3)",
                 }}
               >
+                <LightbulbToggle mode={s.mode} onChange={handleModeChange} />
+
                 <button
                   onClick={handleReset}
-                  className="w-full font-[family-name:var(--font-mono)] uppercase text-brown-400 hover:text-accent-orange transition-colors"
+                  className="flex-1 font-[family-name:var(--font-mono)] uppercase text-brown-400 hover:text-accent-orange transition-colors"
                   style={{
                     fontSize: "var(--text-xs)",
                     letterSpacing: "0.12em",
@@ -375,27 +517,28 @@ export function SettingsPanel({ settingsRef }: SettingsPanelProps) {
                     transitionDuration: "var(--duration-normal)",
                   }}
                 >
-                  ↻ Reset
+                  Reset
                 </button>
-
-                <AnimatePresence>
-                  {toast && (
-                    <motion.p
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 4 }}
-                      transition={{ duration: 0.15 }}
-                      className="font-[family-name:var(--font-mono)] text-brown-300 text-center"
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        marginTop: "var(--space-2)",
-                      }}
-                    >
-                      {toast}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
               </div>
+
+              {/* Toast */}
+              <AnimatePresence>
+                {toast && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    transition={{ duration: 0.15 }}
+                    className="font-[family-name:var(--font-mono)] text-brown-300 text-center"
+                    style={{
+                      fontSize: "var(--text-xs)",
+                      padding: "0 var(--space-4) var(--space-3)",
+                    }}
+                  >
+                    {toast}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </motion.div>
           </>
         )}

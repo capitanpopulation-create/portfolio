@@ -169,6 +169,8 @@ export function HeroCanvas({ settingsRef }: HeroCanvasProps) {
       glowIntensity: s.glowIntensity,
       lineColors: theme.lineColors,
       accentColor: theme.accentColor,
+      shape: s.shape,
+      angle: s.angle,
     };
 
     // === Scroll aspect decay toward circle ===
@@ -337,7 +339,7 @@ export function HeroCanvas({ settingsRef }: HeroCanvasProps) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawLines(ctx, lines, h, dpr, s.glowIntensity, s.mode === "light");
+    drawLines(ctx, lines, h, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
 
     rafRef.current = requestAnimationFrame(animate);
   }, [getSettings]);

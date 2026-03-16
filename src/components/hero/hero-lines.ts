@@ -1,4 +1,5 @@
 import { LINE_COUNT, MAX_THICKNESS, LINE_COLORS, ACCENT_COLOR, MAX_LINE_HEIGHT, MAX_OPACITY, LERP_IN, LERP_OUT, GLOW_OPACITY, GLOW_BLUR } from "@/lib/constants";
+import type { ShapeId } from "@/lib/canvas-settings";
 
 export interface LineState {
   x: number;
@@ -18,6 +19,8 @@ export interface LineDynamicSettings {
   glowIntensity: number;
   lineColors: [number, number, number][];
   accentColor: [number, number, number];
+  shape: ShapeId;
+  angle: number;
 }
 
 /** Default settings from static constants (used when no dynamic settings provided) */
@@ -29,6 +32,8 @@ const STATIC_DEFAULTS: LineDynamicSettings = {
   glowIntensity: GLOW_OPACITY,
   lineColors: LINE_COLORS.map((c) => [...c] as [number, number, number]),
   accentColor: [...ACCENT_COLOR],
+  shape: "line",
+  angle: 0,
 };
 
 export function createLines(viewportWidth: number, viewportHeight: number, lineCount?: number): LineState[] {
@@ -131,17 +136,71 @@ export function updateLines(
   }
 }
 
+// ---------------------------------------------------------------------------
+// Shape drawing helper
+// ---------------------------------------------------------------------------
+
+function drawShape(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  cy: number,
+  w: number,
+  h: number,
+  shape: ShapeId,
+  angleRad: number
+) {
+  switch (shape) {
+    case "line":
+      // Vertical ellipse with optional rotation
+      ctx.ellipse(x, cy, w, h / 2, angleRad, 0, Math.PI * 2);
+      break;
+
+    case "circle": {
+      // True circle — radius is the average of w and h/2
+      const radius = Math.max(w, h / 2) * 0.6;
+      ctx.ellipse(x, cy, radius, radius, 0, 0, Math.PI * 2);
+      break;
+    }
+
+    case "square": {
+      // Rotatable rectangle
+      const halfW = Math.max(w * 1.5, 2);
+      const halfH = h / 2;
+      ctx.save();
+      ctx.translate(x, cy);
+      ctx.rotate(angleRad);
+      ctx.rect(-halfW, -halfH, halfW * 2, halfH * 2);
+      ctx.restore();
+      break;
+    }
+
+    case "diamond": {
+      // Diamond = square rotated 45° + user angle
+      const s = Math.max(w, h / 2) * 0.5;
+      ctx.save();
+      ctx.translate(x, cy);
+      ctx.rotate(angleRad + Math.PI / 4);
+      ctx.rect(-s, -s, s * 2, s * 2);
+      ctx.restore();
+      break;
+    }
+  }
+}
+
 export function drawLines(
   ctx: CanvasRenderingContext2D,
   lines: LineState[],
   viewportHeight: number,
   dpr: number,
   glowIntensity?: number,
-  isLightMode?: boolean
+  isLightMode?: boolean,
+  shape?: ShapeId,
+  angle?: number
 ) {
   const glowOpacity = glowIntensity ?? GLOW_OPACITY;
-  // On light backgrounds, use multiply blend and reduce glow so colors stay rich
   const lightGlowFactor = isLightMode ? 0.5 : 1;
+  const activeShape = shape ?? "line";
+  const angleRad = ((angle ?? 0) * Math.PI) / 180;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -164,7 +223,7 @@ export function drawLines(
       ctx.globalAlpha = line.opacity * glowOpacity * lightGlowFactor;
       ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
       ctx.beginPath();
-      ctx.ellipse(x, cy, w * 1.5, h / 2, 0, 0, Math.PI * 2);
+      drawShape(ctx, x, cy, w * 1.5, h, activeShape, angleRad);
       ctx.fill();
       ctx.restore();
     }
@@ -181,7 +240,7 @@ export function drawLines(
 
     ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.ellipse(x, cy, w, h / 2, 0, 0, Math.PI * 2);
+    drawShape(ctx, x, cy, w, h, activeShape, angleRad);
     ctx.fill();
     ctx.restore();
   }

@@ -64,13 +64,15 @@ export function MiniCanvas({ settingsRef, isActive }: MiniCanvasProps) {
         glowIntensity: s.glowIntensity,
         lineColors: theme.lineColors,
         accentColor: theme.accentColor,
+        shape: s.shape,
+        angle: s.angle,
       }
     );
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawLines(ctx, linesRef.current, MINI_SIZE, dpr, s.glowIntensity, s.mode === "light");
+    drawLines(ctx, linesRef.current, MINI_SIZE, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
 
     rafRef.current = requestAnimationFrame(animate);
   }, [settingsRef]);

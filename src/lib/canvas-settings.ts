@@ -4,6 +4,7 @@
 
 export type ThemeId = "earth" | "arctic" | "kinetic";
 export type ModeId = "light" | "dark";
+export type ShapeId = "line" | "circle" | "square" | "diamond";
 
 export interface ThemeColors {
   background: string;
@@ -22,6 +23,8 @@ export interface CanvasSettings {
   scrollSensitivity: number;
   glowIntensity: number;
   maxLineHeight: number;
+  shape: ShapeId;
+  angle: number;
   theme: ThemeId;
   mode: ModeId;
 }
@@ -274,6 +277,8 @@ export const DEFAULT_SETTINGS: CanvasSettings = {
   scrollSensitivity: 0.12,
   glowIntensity: 0.3,
   maxLineHeight: 0.8,
+  shape: "line",
+  angle: 0,
   theme: "earth",
   mode: "dark",
 };
