@@ -1,7 +1,16 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { createLines, updateLines, drawLines, type LineState } from "@/components/hero/hero-lines";
+import {
+  createLines,
+  updateLines,
+  drawLines,
+  drawConcentricShapes,
+  updateRings,
+  createRings,
+  type LineState,
+  type RingState,
+} from "@/components/hero/hero-lines";
 import { type CanvasSettings, getThemeColors, DEFAULT_SETTINGS } from "@/lib/canvas-settings";
 
 interface MiniCanvasProps {
@@ -16,6 +25,7 @@ const CURSOR_SPEED = 0.8; // revolutions per second
 export function MiniCanvas({ settingsRef, isActive }: MiniCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const linesRef = useRef<LineState[]>([]);
+  const ringsRef = useRef<RingState[]>(createRings(15));
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const phaseRef = useRef(0);
@@ -48,31 +58,47 @@ export function MiniCanvas({ settingsRef, isActive }: MiniCanvasProps) {
     // Scale radius for mini canvas
     const miniRadius = 40 * s.radiusMultiplier;
 
-    updateLines(
-      linesRef.current,
-      cx, cy,
-      true,
-      dt,
-      miniRadius,
-      1.0,
-      MINI_SIZE,
-      {
-        maxThickness: s.maxThickness,
-        lerpIn: s.lerpIn,
-        lerpOut: s.lerpOut,
-        maxLineHeight: s.maxLineHeight,
-        glowIntensity: s.glowIntensity,
-        lineColors: theme.lineColors,
-        accentColor: theme.accentColor,
-        shape: s.shape,
-        angle: s.angle,
-      }
-    );
+    const lineSettings = {
+      maxThickness: s.maxThickness,
+      lerpIn: s.lerpIn,
+      lerpOut: s.lerpOut,
+      maxLineHeight: s.maxLineHeight,
+      glowIntensity: s.glowIntensity,
+      lineColors: theme.lineColors,
+      accentColor: theme.accentColor,
+      shape: s.shape,
+      angle: s.angle,
+    };
+
+    const isConcentricShape = s.shape !== "line";
+
+    if (!isConcentricShape) {
+      updateLines(
+        linesRef.current,
+        cx, cy,
+        true,
+        dt,
+        miniRadius,
+        1.0,
+        MINI_SIZE,
+        lineSettings
+      );
+    } else {
+      updateRings(ringsRef.current, cx, cy, true, dt, miniRadius, lineSettings);
+    }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawLines(ctx, linesRef.current, MINI_SIZE, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
+
+    if (isConcentricShape) {
+      drawConcentricShapes(
+        ctx, 1.0,
+        dpr, ringsRef.current, lineSettings, s.mode === "light"
+      );
+    } else {
+      drawLines(ctx, linesRef.current, MINI_SIZE, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
+    }
 
     rafRef.current = requestAnimationFrame(animate);
   }, [settingsRef]);

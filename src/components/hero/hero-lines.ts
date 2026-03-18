@@ -1,4 +1,4 @@
-import { LINE_COUNT, MAX_THICKNESS, LINE_COLORS, ACCENT_COLOR, MAX_LINE_HEIGHT, MAX_OPACITY, LERP_IN, LERP_OUT, GLOW_OPACITY, GLOW_BLUR } from "@/lib/constants";
+import { LINE_COUNT, MAX_THICKNESS, LINE_COLORS, ACCENT_COLOR, MAX_LINE_HEIGHT, MAX_OPACITY, LERP_IN, LERP_OUT, GLOW_OPACITY, GLOW_BLUR, MIN_RING_RADIUS } from "@/lib/constants";
 import type { ShapeId } from "@/lib/canvas-settings";
 
 export interface LineState {
@@ -60,7 +60,7 @@ export function repositionLines(lines: LineState[], viewportWidth: number) {
   }
 }
 
-function getColor(proximity: number, lineColors: [number, number, number][], accentColor: [number, number, number]): [number, number, number] {
+export function getColor(proximity: number, lineColors: [number, number, number][], accentColor: [number, number, number]): [number, number, number] {
   if (proximity < 0.6) {
     const t = proximity / 0.6;
     return [
@@ -162,18 +162,6 @@ function drawShape(
       break;
     }
 
-    case "square": {
-      // Rotatable rectangle
-      const halfW = Math.max(w * 1.5, 2);
-      const halfH = h / 2;
-      ctx.save();
-      ctx.translate(x, cy);
-      ctx.rotate(angleRad);
-      ctx.rect(-halfW, -halfH, halfW * 2, halfH * 2);
-      ctx.restore();
-      break;
-    }
-
     case "diamond": {
       // Diamond = square rotated 45° + user angle
       const s = Math.max(w, h / 2) * 0.5;
@@ -242,6 +230,206 @@ export function drawLines(
     ctx.beginPath();
     drawShape(ctx, x, cy, w, h, activeShape, angleRad);
     ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Concentric ripple shapes — per-ring animated state (stroke outlines)
+// ---------------------------------------------------------------------------
+
+export interface RingState {
+  centerX: number;     // per-ring center that lags behind cursor
+  centerY: number;
+  radius: number;
+  opacity: number;
+  strokeWidth: number;
+  color: [number, number, number];
+  phase: number;       // oscillation phase offset (radians)
+}
+
+export function createRings(count: number): RingState[] {
+  const rings: RingState[] = [];
+  for (let i = 0; i < count; i++) {
+    rings.push({
+      centerX: -9999, centerY: -9999,
+      radius: 0, opacity: 0, strokeWidth: 0,
+      color: [0, 0, 0],
+      phase: (i / count) * Math.PI * 2,  // evenly offset phases
+    });
+  }
+  return rings;
+}
+
+/** Minimum outer spread so rings are well-spaced even during gentle movement */
+const MIN_SPREAD = 300;
+
+/** Global time accumulator for oscillation */
+let _ringTime = 0;
+
+export function updateRings(
+  rings: RingState[],
+  cursorX: number,
+  cursorY: number,
+  isActive: boolean,
+  dt: number,
+  effectiveRadius: number,
+  settings?: LineDynamicSettings
+) {
+  const s = settings ?? STATIC_DEFAULTS;
+  const count = rings.length;
+  if (count === 0) return;
+
+  _ringTime += dt;
+
+  const maxRadius = Math.max(effectiveRadius, MIN_SPREAD);
+
+  for (let i = 0; i < count; i++) {
+    const ring = rings[i];
+    // t: 0 = innermost, 1 = outermost
+    const t = count > 1 ? i / (count - 1) : 0;
+
+    if (isActive) {
+      // === Per-ring center: inner rings track cursor tightly, outer rings lag ===
+      const centerRate = s.lerpIn * (1.5 - t * 1.2) * dt;
+      const clampedCenterRate = Math.min(centerRate, 1);
+
+      if (ring.centerX < -9000) {
+        // First activation — snap to cursor
+        ring.centerX = cursorX;
+        ring.centerY = cursorY;
+      } else {
+        ring.centerX += (cursorX - ring.centerX) * clampedCenterRate;
+        ring.centerY += (cursorY - ring.centerY) * clampedCenterRate;
+      }
+
+      // === Oscillation: subtle breathing on radius ===
+      const oscillation = 1 + Math.sin(_ringTime * 2.5 + ring.phase) * 0.08;
+
+      // Compute targets — exponential spacing: inner rings tight, outer rings spread
+      const expT = t * t;  // quadratic growth: gaps widen outward
+      const baseRadius = MIN_RING_RADIUS + expT * (maxRadius - MIN_RING_RADIUS);
+      const targetRadius = baseRadius * oscillation;
+      const proximity = 1 - t;
+      const targetOpacity = Math.pow(proximity, 1.5) * Math.min(0.15 + proximity * 0.85, MAX_OPACITY);
+      // Stroke: innermost is thickest, outermost is thinnest
+      const targetStrokeWidth = s.maxThickness * Math.max(1 - t * 0.85, 0.15);
+      const targetColor = getColor(proximity, s.lineColors, s.accentColor);
+
+      // Staggered lerp: inner rings respond faster, outer rings lag
+      const rate = s.lerpIn * (0.5 + (1 - t) * 1.0) * dt;
+      const clampedRate = Math.min(rate, 1);
+
+      ring.radius += (targetRadius - ring.radius) * clampedRate;
+      ring.opacity += (targetOpacity - ring.opacity) * clampedRate;
+      ring.strokeWidth += (targetStrokeWidth - ring.strokeWidth) * clampedRate;
+      ring.color[0] += (targetColor[0] - ring.color[0]) * clampedRate;
+      ring.color[1] += (targetColor[1] - ring.color[1]) * clampedRate;
+      ring.color[2] += (targetColor[2] - ring.color[2]) * clampedRate;
+    } else {
+      // Decay toward zero — outer rings fade first (reverse stagger)
+      const rate = s.lerpOut * (0.5 + t * 1.0) * dt;
+      const decay = Math.max(1 - rate, 0);
+
+      ring.radius *= decay;
+      ring.opacity *= decay;
+      ring.strokeWidth *= decay;
+
+      // Centers drift slowly away
+      ring.centerX += (ring.centerX > 0 ? 1 : -1) * dt * 5;
+      ring.centerY += (ring.centerY > 0 ? 1 : -1) * dt * 5;
+
+      if (ring.opacity < 0.005) {
+        ring.radius = 0;
+        ring.opacity = 0;
+        ring.strokeWidth = 0;
+      }
+    }
+  }
+}
+
+function strokeRingShape(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  sizeX: number,
+  sizeY: number,
+  shape: ShapeId,
+  angleRad: number
+) {
+  switch (shape) {
+    case "circle":
+      ctx.ellipse(cx, cy, sizeX, sizeY, 0, 0, Math.PI * 2);
+      break;
+
+    case "diamond": {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleRad + Math.PI / 4);
+      const s = Math.max(sizeX, sizeY) * 0.7;
+      ctx.rect(-s, -s, s * 2, s * 2);
+      ctx.restore();
+      break;
+    }
+
+    default:
+      ctx.ellipse(cx, cy, sizeX, sizeY, 0, 0, Math.PI * 2);
+      break;
+  }
+}
+
+export function drawConcentricShapes(
+  ctx: CanvasRenderingContext2D,
+  aspect: number,
+  dpr: number,
+  rings: RingState[],
+  settings: LineDynamicSettings,
+  isLightMode: boolean
+) {
+  const glowOpacity = settings.glowIntensity;
+  const lightGlowFactor = isLightMode ? 0.5 : 1;
+  const angleRad = (settings.angle * Math.PI) / 180;
+
+  for (let i = 0; i < rings.length; i++) {
+    const ring = rings[i];
+    if (ring.opacity < 0.005) continue;
+
+    // Each ring has its own lagging center
+    const cx = ring.centerX * dpr;
+    const cy = ring.centerY * dpr;
+
+    const rx = ring.radius * dpr * Math.sqrt(aspect);
+    const ry = ring.radius * dpr / Math.sqrt(aspect);
+    if (rx < 0.5 && ry < 0.5) continue;
+
+    const r = Math.round(ring.color[0]);
+    const g = Math.round(ring.color[1]);
+    const b = Math.round(ring.color[2]);
+    const sw = Math.max(ring.strokeWidth * dpr, 0.5);
+
+    // Glow pass
+    if (glowOpacity > 0) {
+      ctx.save();
+      if (isLightMode) ctx.globalCompositeOperation = "multiply";
+      ctx.filter = `blur(${GLOW_BLUR * dpr}px)`;
+      ctx.globalAlpha = ring.opacity * glowOpacity * lightGlowFactor;
+      ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+      ctx.lineWidth = sw * 1.5;
+      ctx.beginPath();
+      strokeRingShape(ctx, cx, cy, rx, ry, settings.shape, angleRad);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Sharp pass
+    ctx.save();
+    if (isLightMode) ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = ring.opacity;
+    ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+    ctx.lineWidth = sw;
+    ctx.beginPath();
+    strokeRingShape(ctx, cx, cy, rx, ry, settings.shape, angleRad);
+    ctx.stroke();
     ctx.restore();
   }
 }

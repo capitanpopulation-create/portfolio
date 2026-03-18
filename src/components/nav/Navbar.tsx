@@ -1,8 +1,102 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { INTRO_PULSE_DURATION } from "@/lib/constants";
+
+const LOGO_TEXT = "Gabo Behrens";
+const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.1;
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.045,
+      delayChildren: ENTRANCE_DELAY,
+    },
+  },
+};
+
+const letterVariants = {
+  hidden: { y: 14, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 380,
+      damping: 12,
+      mass: 0.7,
+    },
+  },
+};
+
+function AnimatedLogo() {
+  const lettersRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const rafRef = useRef<number>(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const startTimeRef = useRef<number>(0);
+
+  const animate = useCallback(
+    (time: number) => {
+      if (!startTimeRef.current) startTimeRef.current = time;
+      const elapsed = (time - startTimeRef.current) / 1000;
+
+      lettersRef.current.forEach((el, i) => {
+        if (!el || el.textContent === "\u00A0") return;
+        const phase = i * 0.55;
+        const y = Math.sin(elapsed * 1.8 + phase) * 0.8;
+        el.style.transform = `translateY(${y}px)`;
+      });
+
+      rafRef.current = requestAnimationFrame(animate);
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (isHovered) {
+      startTimeRef.current = 0;
+      rafRef.current = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(rafRef.current);
+      // Reset positions smoothly (CSS transition handles it)
+      lettersRef.current.forEach((el) => {
+        if (el) el.style.transform = "translateY(0px)";
+      });
+    }
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [isHovered, animate]);
+
+  return (
+    <motion.span
+      className="inline-flex"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ overflow: "visible" }}
+    >
+      {LOGO_TEXT.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          ref={(el) => { lettersRef.current[i] = el; }}
+          variants={letterVariants}
+          style={{
+            display: "inline-block",
+            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            willChange: "transform",
+          }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+}
 
 function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
@@ -22,8 +116,8 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         <Link
           href="/"
           onClick={onClose}
-          className="font-[family-name:var(--font-mono)] uppercase text-brown-100"
-          style={{ fontSize: "var(--text-sm)", letterSpacing: "0.2em" }}
+          className="font-[family-name:var(--font-mono)] uppercase text-brown-100 font-extrabold"
+          style={{ fontSize: "var(--text-sm)", letterSpacing: "0.12em" }}
         >
           Gabo Behrens
         </Link>
@@ -96,14 +190,14 @@ export function Navbar() {
         >
           <Link
             href="/"
-            className="text-brown-100 hover:text-accent-orange transition-colors font-semibold"
+            className="text-brown-100 hover:text-accent-orange transition-colors font-extrabold"
             style={{
               fontSize: "var(--text-sm)",
-              letterSpacing: "0.2em",
+              letterSpacing: "0.12em",
               transitionDuration: "var(--duration-normal)",
             }}
           >
-            Gabo Behrens
+            <AnimatedLogo />
           </Link>
 
           {/* Desktop nav */}

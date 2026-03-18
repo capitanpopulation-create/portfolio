@@ -95,7 +95,7 @@ export function PremiumSlider({
   const showTooltip = isDragging || isHovered;
 
   return (
-    <div style={{ width: 120 }}>
+    <div style={{ width: "100%", minWidth: 60 }}>
       {/* Label */}
       <div
         className="font-[family-name:var(--font-mono)] uppercase text-brown-300"

@@ -2,9 +2,9 @@
 // Canvas Settings — Types, defaults, and color themes
 // ============================================================================
 
-export type ThemeId = "earth" | "arctic" | "kinetic";
+export type ThemeId = "earth" | "arctic" | "kinetic" | "bamboo";
 export type ModeId = "light" | "dark";
-export type ShapeId = "line" | "circle" | "square" | "diamond";
+export type ShapeId = "line" | "circle" | "diamond";
 
 export interface ThemeColors {
   background: string;
@@ -94,6 +94,26 @@ export const THEMES: Record<ThemeId, Record<ModeId, ThemeColors>> = {
       accentColor: [210, 10, 10],
     },
   },
+  bamboo: {
+    dark: {
+      background: "#001F24",
+      lineColors: [
+        [29, 61, 76],      // #1D3D4C — dark teal
+        [72, 90, 117],     // #485A75 — slate blue
+        [186, 149, 183],   // #BA95B7 — mauve
+      ],
+      accentColor: [245, 181, 203], // #F5B5CB — soft pink
+    },
+    light: {
+      background: "#F5F0F3",
+      lineColors: [
+        [20, 45, 58],
+        [50, 65, 90],
+        [140, 110, 138],
+      ],
+      accentColor: [154, 80, 120], // #9A5078 — deeper pink for WCAG on light
+    },
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -104,6 +124,7 @@ export const THEME_ACCENT_HEX: Record<ThemeId, Record<ModeId, string>> = {
   earth:   { dark: "#E8722A", light: "#D25F1E" },
   arctic:  { dark: "#3B82F6", light: "#2563D2" },
   kinetic: { dark: "#EF0613", light: "#C80510" },
+  bamboo:  { dark: "#F5B5CB", light: "#9A5078" },
 };
 
 // ---------------------------------------------------------------------------
@@ -251,6 +272,46 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--border-interactive": "rgba(40, 20, 10, 0.18)",
     },
   },
+  bamboo: {
+    dark: {
+      "--background": "#001F24",
+      "--foreground": "#F0E8EC",
+      "--limestone": "#F5F0F3",
+      "--brown-100": "#F5B5CB",
+      "--brown-200": "#BA95B7",
+      "--brown-300": "#7F779A",
+      "--brown-400": "#485A75",
+      "--brown-500": "#1D3D4C",
+      "--brown-600": "#0A2E35",
+      "--jp-brown": "#001A1E",
+      "--jp-dark-brown": "#001216",
+      "--accent-orange": "#F5B5CB",
+      "--nav-surface": "rgba(0, 31, 36, 0.92)",
+      "--surface-elevated": "rgba(0, 38, 44, 0.95)",
+      "--border-subtle": "rgba(186, 149, 183, 0.15)",
+      "--border-muted": "rgba(186, 149, 183, 0.1)",
+      "--border-interactive": "rgba(186, 149, 183, 0.2)",
+    },
+    light: {
+      "--background": "#F5F0F3",
+      "--foreground": "#001F24",
+      "--limestone": "#001F24",
+      "--brown-100": "#0A2E35",
+      "--brown-200": "#1D3D4C",
+      "--brown-300": "#485A75",
+      "--brown-400": "#7F779A",
+      "--brown-500": "#BA95B7",
+      "--brown-600": "#D4C0D0",
+      "--jp-brown": "#EAE0E6",
+      "--jp-dark-brown": "#F0EAF0",
+      "--accent-orange": "#9A5078",
+      "--nav-surface": "rgba(245, 240, 243, 0.92)",
+      "--surface-elevated": "rgba(255, 250, 252, 0.95)",
+      "--border-subtle": "rgba(0, 31, 36, 0.12)",
+      "--border-muted": "rgba(0, 31, 36, 0.08)",
+      "--border-interactive": "rgba(0, 31, 36, 0.18)",
+    },
+  },
 };
 
 /** Apply theme + mode CSS variables to the document root */
@@ -260,6 +321,14 @@ export function applyThemeVariables(theme: ThemeId, mode: ModeId): void {
   for (const [key, value] of Object.entries(vars)) {
     root.style.setProperty(key, value);
   }
+
+  // Force-light sections (work/about) always get the light variant of the current theme
+  const lightVars = UI_THEMES[theme]["light"];
+  document.querySelectorAll<HTMLElement>("[data-force-light]").forEach((el) => {
+    for (const [key, value] of Object.entries(lightVars)) {
+      el.style.setProperty(key, value);
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------

@@ -23,8 +23,12 @@ import {
   repositionLines,
   updateLines,
   drawLines,
+  drawConcentricShapes,
+  updateRings,
+  createRings,
   type LineState,
   type LineDynamicSettings,
+  type RingState,
 } from "./hero-lines";
 import { type CanvasSettings, getThemeColors, DEFAULT_SETTINGS } from "@/lib/canvas-settings";
 
@@ -97,6 +101,10 @@ export function HeroCanvas({ settingsRef }: HeroCanvasProps) {
   // Intro pulse state
   const introPhaseRef = useRef<"pulse" | "fade" | "done">("pulse");
   const introTimeRef = useRef(0);
+
+  // Concentric ripple state (per-ring)
+  const ringsRef = useRef<RingState[]>([]);
+  const lastRingCountRef = useRef(0);
 
   // Track line count for recreation
   const lastLineCountRef = useRef(DEFAULT_SETTINGS.lineCount);
@@ -334,12 +342,43 @@ export function HeroCanvas({ settingsRef }: HeroCanvasProps) {
       updateLines(lines, -9999, -9999, false, dt, 0, currentAspectRef.current, h, lineSettings);
     }
 
+    // === Update concentric rings (for non-line shapes) ===
+    const isConcentricShape = s.shape !== "line";
+    if (isConcentricShape) {
+      // Recreate rings if count changed
+      if (ringsRef.current.length !== s.lineCount || lastRingCountRef.current !== s.lineCount) {
+        ringsRef.current = createRings(s.lineCount);
+        lastRingCountRef.current = s.lineCount;
+      }
+      updateRings(
+        ringsRef.current,
+        cursorRef.current.x,
+        cursorRef.current.y,
+        (cursorActiveRef.current && effectiveMoving) || stillPulseRadius > 0,
+        dt,
+        effectiveRadius,
+        lineSettings
+      );
+    }
+
     // === Draw ===
     // Fill with theme background (required for light mode)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawLines(ctx, lines, h, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
+
+    if (isConcentricShape) {
+      drawConcentricShapes(
+        ctx,
+        currentAspectRef.current,
+        dpr,
+        ringsRef.current,
+        lineSettings,
+        s.mode === "light"
+      );
+    } else {
+      drawLines(ctx, lines, h, dpr, s.glowIntensity, s.mode === "light", s.shape, s.angle);
+    }
 
     rafRef.current = requestAnimationFrame(animate);
   }, [getSettings]);

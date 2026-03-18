@@ -9,13 +9,13 @@ export interface WorkProject {
 
 export const PROJECTS: WorkProject[] = [
   {
-    id: "cometeer",
-    title: "Cometeer",
+    id: "erp-integration",
+    title: "ERP Integration Tool",
     description:
-      "Redesigning the checkout experience to simplify the choice between one-time purchases and subscriptions — increasing OTP conversion without cannibalizing subscriptions.",
-    tags: ["Case Study", "E-Commerce", "UX Design"],
-    href: "/work/cometeer",
-    thumbnail: "/images/work/cometeer-thumb.png",
+      "Designing a seamless interface for connecting enterprise resource planning systems — simplifying complex data flows into clear, actionable workflows.",
+    tags: ["Product Design", "Enterprise", "B2B"],
+    href: "/work/erp-integration",
+    thumbnail: "/images/work/erp-integration-thumb.png",
   },
   {
     id: "agent-builder",
@@ -27,13 +27,13 @@ export const PROJECTS: WorkProject[] = [
     thumbnail: "/images/work/agent-builder-thumb.png",
   },
   {
-    id: "erp-integration",
-    title: "ERP Integration Tool",
+    id: "cometeer",
+    title: "Cometeer",
     description:
-      "Designing a seamless interface for connecting enterprise resource planning systems — simplifying complex data flows into clear, actionable workflows.",
-    tags: ["Product Design", "Enterprise", "B2B"],
-    href: "/work/erp-integration",
-    thumbnail: "/images/work/erp-integration-thumb.png",
+      "Redesigning the checkout experience to simplify the choice between one-time purchases and subscriptions — increasing OTP conversion without cannibalizing subscriptions.",
+    tags: ["Case Study", "E-Commerce", "UX Design"],
+    href: "/work/cometeer",
+    thumbnail: "/images/work/cometeer-thumb.png",
   },
 ];
 

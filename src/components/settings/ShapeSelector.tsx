@@ -29,15 +29,6 @@ const SHAPES: { id: ShapeId; label: string; icon: React.ReactNode }[] = [
     ),
   },
   {
-    id: "square",
-    label: "Square",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <rect x="3" y="3" width="10" height="10" stroke="currentColor" strokeWidth="1.3" />
-      </svg>
-    ),
-  },
-  {
     id: "diamond",
     label: "Diamond",
     icon: (

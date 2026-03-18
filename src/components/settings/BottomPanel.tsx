@@ -40,7 +40,7 @@ function ThemeToggle({
   accent: string;
   onChange: (t: ThemeId) => void;
 }) {
-  const themes: ThemeId[] = ["earth", "arctic", "kinetic"];
+  const themes: ThemeId[] = ["earth", "arctic", "kinetic", "bamboo"];
 
   return (
     <div
@@ -247,9 +247,9 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
         boxShadow: "0 -4px 24px rgba(0,0,0,0.08)",
       }}
     >
-      {/* Desktop layout */}
+      {/* Large desktop layout (≥1024px) — single row */}
       <div
-        className="hidden md:flex items-center justify-center"
+        className="hidden lg:flex items-center justify-center"
         style={{
           maxWidth: 1200,
           margin: "0 auto",
@@ -257,112 +257,55 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
           gap: "var(--space-5)",
         }}
       >
-        {/* Mini preview */}
         <MiniCanvas settingsRef={settingsRef} isActive={true} />
-
         <Divider />
-
-        {/* Mode switch */}
         <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-
         <Divider />
-
-        {/* Sliders */}
-        <div className="flex items-end" style={{ gap: "var(--space-4)" }}>
-          <PremiumSlider
-            label="Count"
-            value={s.lineCount}
-            min={20}
-            max={100}
-            step={10}
-            accentColor={accent}
-            onChange={(v) => update("lineCount", v)}
-          />
-          <PremiumSlider
-            label="Height"
-            value={s.maxLineHeight}
-            min={0.1}
-            max={1.0}
-            step={0.1}
-            accentColor={accent}
-            onChange={(v) => update("maxLineHeight", v)}
-          />
-          <PremiumSlider
-            label="Glow"
-            value={s.glowIntensity}
-            min={0}
-            max={1.0}
-            step={0.1}
-            accentColor={accent}
-            onChange={(v) => update("glowIntensity", v)}
-          />
-          <PremiumSlider
-            label="Width"
-            value={s.maxThickness}
-            min={1}
-            max={12}
-            step={1}
-            accentColor={accent}
-            onChange={(v) => update("maxThickness", v)}
-          />
-          <PremiumSlider
-            label="Angle"
-            value={s.angle}
-            min={0}
-            max={360}
-            step={15}
-            unit="°"
-            accentColor={accent}
-            onChange={(v) => update("angle", v)}
-          />
+        <div className="flex items-end flex-1" style={{ gap: "var(--space-4)" }}>
+          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
+          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
+          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
         </div>
-
         <Divider />
-
-        {/* Shape selector */}
         <div>
-          <div
-            className="font-[family-name:var(--font-mono)] uppercase text-brown-300"
-            style={{
-              fontSize: "10px",
-              letterSpacing: "0.1em",
-              marginBottom: "var(--space-2)",
-              userSelect: "none",
-            }}
-          >
-            Shape
-          </div>
-          <ShapeSelector
-            active={s.shape}
-            accent={accent}
-            onChange={(shape: ShapeId) => update("shape", shape)}
-          />
+          <div className="font-[family-name:var(--font-mono)] uppercase text-brown-300" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Shape</div>
+          <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
         </div>
-
         <Divider />
-
-        {/* Theme selector */}
         <div>
-          <div
-            className="font-[family-name:var(--font-mono)] uppercase text-brown-300"
-            style={{
-              fontSize: "10px",
-              letterSpacing: "0.1em",
-              marginBottom: "var(--space-2)",
-              userSelect: "none",
-            }}
-          >
-            Theme
-          </div>
-          <ThemeToggle
-            active={s.theme}
-            accent={accent}
-            onChange={handleThemeChange}
-          />
+          <div className="font-[family-name:var(--font-mono)] uppercase text-brown-300" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Theme</div>
+          <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
         </div>
       </div>
 
-      {/* Mobile layout */}
+      {/* Tablet layout (768px–1023px) — two rows */}
+      <div
+        className="hidden md:flex lg:hidden flex-col"
+        style={{
+          padding: "var(--space-3) var(--page-margin)",
+          gap: "var(--space-3)",
+        }}
+      >
+        {/* Row 1: Preview + Mode + Shape + Theme */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
+            <MiniCanvas settingsRef={settingsRef} isActive={true} />
+            <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
+          </div>
+          <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
+            <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
+            <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
+          </div>
+        </div>
+        {/* Row 2: All sliders, full width */}
+        <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
+          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
+          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
+          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
+        </div>
+      </div>
+
+      {/* Mobile layout (<768px) — three rows, everything clear */}
       <div
         className="flex md:hidden flex-col"
         style={{
@@ -370,74 +313,18 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
           gap: "var(--space-3)",
         }}
       >
-        {/* Row 1: Preview + Mode + Theme */}
+        {/* Row 1: Mode + Shape */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
-            <MiniCanvas settingsRef={settingsRef} isActive={true} />
-            <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-          </div>
-          <ThemeToggle
-            active={s.theme}
-            accent={accent}
-            onChange={handleThemeChange}
-          />
+          <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
+          <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
         </div>
-
-        {/* Row 2: Sliders + Shape */}
+        {/* Row 2: Theme (full width) */}
+        <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
+        {/* Row 3: Sliders */}
         <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
-          <div className="flex items-end flex-1" style={{ gap: "var(--space-2)" }}>
-            <PremiumSlider
-              label="Count"
-              value={s.lineCount}
-              min={20}
-              max={100}
-              step={10}
-              accentColor={accent}
-              onChange={(v) => update("lineCount", v)}
-            />
-            <PremiumSlider
-              label="Height"
-              value={s.maxLineHeight}
-              min={0.1}
-              max={1.0}
-              step={0.1}
-              accentColor={accent}
-              onChange={(v) => update("maxLineHeight", v)}
-            />
-            <PremiumSlider
-              label="Glow"
-              value={s.glowIntensity}
-              min={0}
-              max={1.0}
-              step={0.1}
-              accentColor={accent}
-              onChange={(v) => update("glowIntensity", v)}
-            />
-            <PremiumSlider
-              label="Width"
-              value={s.maxThickness}
-              min={1}
-              max={12}
-              step={1}
-              accentColor={accent}
-              onChange={(v) => update("maxThickness", v)}
-            />
-            <PremiumSlider
-              label="Angle"
-              value={s.angle}
-              min={0}
-              max={360}
-              step={15}
-              unit="°"
-              accentColor={accent}
-              onChange={(v) => update("angle", v)}
-            />
-          </div>
-          <ShapeSelector
-            active={s.shape}
-            accent={accent}
-            onChange={(shape: ShapeId) => update("shape", shape)}
-          />
+          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
+          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
+          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
         </div>
       </div>
     </motion.div>

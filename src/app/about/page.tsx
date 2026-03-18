@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 
 const FOCUS_AREAS = [
   "Product Design",
-  "UX Strategy",
-  "Design Systems",
-  "Interaction Design",
-  "Prototyping",
-  "User Research",
+  "AI Tools",
+  "Motion",
 ];
 
 export default function AboutPage() {

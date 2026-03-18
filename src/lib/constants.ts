@@ -80,6 +80,10 @@ export const INTRO_PULSE_LINES = 5;
 export const INTRO_PULSE_HEIGHT = 0.15;
 export const INTRO_PULSE_DURATION = 2.5;
 
+// === Concentric ripple shapes ===
+
+export const MIN_RING_RADIUS = 10;
+
 // === Glow ===
 
 export const GLOW_BLUR = 10;
