@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   type CanvasSettings,
@@ -190,6 +190,13 @@ function Divider() {
 export function BottomPanel({ settingsRef }: BottomPanelProps) {
   const [, forceUpdate] = useState(0);
   const rerender = useCallback(() => forceUpdate((n) => n + 1), []);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHasEntered(true), ENTRANCE_DELAY * 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const s = settingsRef.current ?? DEFAULT_SETTINGS;
   const accent = THEME_ACCENT_HEX[s.theme][s.mode];
@@ -232,21 +239,73 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
   return (
     <motion.div
       initial={{ y: "100%" }}
-      animate={{ y: 0 }}
+      animate={{ y: isExpanded ? 0 : "100%" }}
       transition={{
-        duration: 0.6,
-        delay: ENTRANCE_DELAY,
+        duration: 0.5,
         ease: [0.16, 1, 0.3, 1],
       }}
       className="fixed bottom-0 left-0 right-0 z-50 pointer-events-auto"
       style={{
+        visibility: hasEntered ? "visible" : "hidden",
         backgroundColor: "var(--surface-elevated)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
         borderTop: "1px solid var(--border-subtle)",
-        boxShadow: "0 -4px 24px rgba(0,0,0,0.08)",
+        boxShadow: "0 -4px 24px rgba(0,0,0,0.12)",
       }}
     >
+      {/* Floating toggle button */}
+      {hasEntered && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          style={{
+            position: "absolute",
+            top: -52,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1,
+          }}
+        >
+          <button
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="transition-colors"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              border: "1px solid var(--border-interactive)",
+              backgroundColor: "var(--surface-elevated)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+              transitionDuration: "var(--duration-normal)",
+            }}
+            aria-label={isExpanded ? "Collapse settings" : "Expand settings"}
+            aria-expanded={isExpanded}
+          >
+            <motion.svg
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              width={18}
+              height={18}
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="var(--brown-300)"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4.5 11.25 L9 6.75 L13.5 11.25" />
+            </motion.svg>
+          </button>
+        </motion.div>
+      )}
       {/* Large desktop layout (≥1024px) — single row */}
       <div
         className="hidden lg:flex items-center justify-center"
