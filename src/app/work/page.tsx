@@ -8,7 +8,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 /* ---- Page ---- */
 export default function WorkPage() {
-  const visible = PROJECTS.filter((p) => !p.comingSoon);
+  const visible = PROJECTS;
 
   return (
     <main className="min-h-screen bg-background" style={{ paddingTop: "var(--nav-height)" }}>

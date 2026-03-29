@@ -5,7 +5,6 @@ export interface WorkProject {
   tags: string[];
   href: string;
   thumbnail?: string;
-  comingSoon?: boolean;
 }
 
 export const PROJECTS: WorkProject[] = [
@@ -26,16 +25,6 @@ export const PROJECTS: WorkProject[] = [
     tags: ["Case Study", "Enterprise", "Product Design"],
     href: "/work/flow",
     thumbnail: "/images/work/flow-thumb.png",
-  },
-  {
-    id: "cometeer",
-    title: "Cometeer",
-    description:
-      "Redesigning the checkout experience to simplify the choice between one-time purchases and subscriptions — increasing OTP conversion without cannibalizing subscriptions.",
-    tags: ["Case Study", "E-Commerce", "UX Design"],
-    href: "/work/cometeer",
-    thumbnail: "/images/work/cometeer-thumb.png",
-    comingSoon: true,
   },
 ];
 
