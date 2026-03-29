@@ -62,7 +62,6 @@ function AnimatedLogo() {
       rafRef.current = requestAnimationFrame(animate);
     } else {
       cancelAnimationFrame(rafRef.current);
-      // Reset positions smoothly (CSS transition handles it)
       lettersRef.current.forEach((el) => {
         if (el) el.style.transform = "translateY(0px)";
       });
@@ -116,8 +115,8 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         <Link
           href="/"
           onClick={onClose}
-          className="font-[family-name:var(--font-mono)] uppercase text-brown-100 font-extrabold"
-          style={{ fontSize: "var(--text-sm)", letterSpacing: "0.12em" }}
+          className="font-[family-name:var(--font-outfit)] text-brown-100"
+          style={{ fontSize: "var(--text-sm)", fontWeight: 600 }}
         >
           Gabo Behrens
         </Link>
@@ -134,12 +133,11 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
       </div>
 
       <nav
-        className="flex flex-col font-[family-name:var(--font-mono)] uppercase"
+        className="flex flex-col font-[family-name:var(--font-outfit)]"
         style={{
           padding: "var(--space-8) var(--page-margin)",
           gap: "var(--space-1)",
-          fontSize: "var(--text-sm)",
-          letterSpacing: "0.16em",
+          fontSize: "var(--text-base)",
         }}
       >
         {[
@@ -153,6 +151,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
             className="text-brown-300 hover:text-accent-orange transition-colors"
             style={{
               padding: "var(--space-4) 0",
+              fontWeight: 500,
               transitionDuration: "var(--duration-normal)",
               borderBottom: "1px solid var(--border-muted)",
             }}
@@ -173,11 +172,10 @@ export function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-50 font-[family-name:var(--font-mono)] uppercase transition-colors"
+        className="fixed top-0 left-0 right-0 z-50 font-[family-name:var(--font-outfit)] transition-colors"
         style={{
           height: "var(--nav-height)",
-          fontSize: "var(--text-xs)",
-          letterSpacing: "0.16em",
+          fontSize: "13px",
           transitionDuration: "var(--duration-slow)",
           backgroundColor: isHome ? "transparent" : "var(--nav-surface)",
           backdropFilter: isHome ? "none" : "blur(12px)",
@@ -190,10 +188,10 @@ export function Navbar() {
         >
           <Link
             href="/"
-            className="text-brown-100 hover:text-accent-orange transition-colors font-extrabold"
+            className="text-brown-100 hover:text-accent-orange transition-colors"
             style={{
-              fontSize: "var(--text-sm)",
-              letterSpacing: "0.12em",
+              fontSize: "14px",
+              fontWeight: 600,
               transitionDuration: "var(--duration-normal)",
             }}
           >
@@ -204,15 +202,15 @@ export function Navbar() {
           <div className="hidden md:flex items-center" style={{ gap: "var(--space-10)" }}>
             <Link
               href="/work"
-              className="text-brown-100 hover:text-accent-orange transition-colors font-medium"
-              style={{ transitionDuration: "var(--duration-normal)" }}
+              className="text-brown-300 hover:text-accent-orange transition-colors"
+              style={{ fontWeight: 500, transitionDuration: "var(--duration-normal)" }}
             >
               Work
             </Link>
             <Link
               href="/about"
-              className="text-brown-100 hover:text-accent-orange transition-colors font-medium"
-              style={{ transitionDuration: "var(--duration-normal)" }}
+              className="text-brown-300 hover:text-accent-orange transition-colors"
+              style={{ fontWeight: 500, transitionDuration: "var(--duration-normal)" }}
             >
               About
             </Link>

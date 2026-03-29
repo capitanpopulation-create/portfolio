@@ -102,7 +102,7 @@ export function PrototypeLightbox({
             style={{
               width: "min(92vw, 1400px)",
               height: "min(88vh, 900px)",
-              borderRadius: "var(--radius-lg)",
+              borderRadius: 4,
               overflow: "hidden",
               border: "1px solid rgba(255,255,255,0.08)",
               background: "#141414",
@@ -144,7 +144,7 @@ export function PrototypeLightbox({
                 style={{
                   width: "32px",
                   height: "32px",
-                  borderRadius: "var(--radius-sm)",
+                  borderRadius: 4,
                   transitionDuration: "var(--duration-normal)",
                   color: "#888",
                 }}
@@ -181,7 +181,7 @@ export function PrototypeLightbox({
                       style={{
                         width: "48px",
                         height: "48px",
-                        borderRadius: "var(--radius-md)",
+                        borderRadius: 4,
                         border: "1px solid rgba(255,255,255,0.08)",
                         background: "#1a1a1a",
                         marginBottom: "var(--space-2)",
@@ -222,7 +222,7 @@ export function PrototypeLightbox({
                       style={{
                         padding: "var(--space-3) var(--space-4)",
                         fontSize: "var(--text-sm)",
-                        borderRadius: "var(--radius-md)",
+                        borderRadius: 4,
                         border: `1px solid ${error ? "var(--accent-orange)" : "rgba(255,255,255,0.12)"}`,
                         background: "#0a0a0a",
                         color: "#eee",
@@ -244,7 +244,7 @@ export function PrototypeLightbox({
                       style={{
                         padding: "var(--space-3) var(--space-4)",
                         fontSize: "var(--text-sm)",
-                        borderRadius: "var(--radius-md)",
+                        borderRadius: 4,
                         background: "var(--accent-orange)",
                         color: "#fff",
                         border: "none",
