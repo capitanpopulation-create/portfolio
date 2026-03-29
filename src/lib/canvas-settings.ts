@@ -138,6 +138,7 @@ interface UITheme {
   "--border-subtle": string;
   "--border-muted": string;
   "--border-interactive": string;
+  "--shadow-image": string;
 }
 
 export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
@@ -156,10 +157,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#0A0C12",
       "--accent-orange": "#EFAA13",
       "--nav-surface": "rgba(13, 17, 23, 0.92)",
-      "--surface-elevated": "rgba(18, 22, 30, 0.95)",
+      "--surface-elevated": "rgba(18, 22, 30, 0.70)",
       "--border-subtle": "rgba(210, 195, 155, 0.15)",
       "--border-muted": "rgba(210, 195, 155, 0.1)",
       "--border-interactive": "rgba(210, 195, 155, 0.2)",
+      "--shadow-image": "0 32px 80px -20px rgba(0,0,0,0.3)",
     },
     light: {
       "--background": "#F5F2EC",
@@ -175,10 +177,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#F0ECE4",
       "--accent-orange": "#EFAA13",
       "--nav-surface": "rgba(245, 242, 236, 0.92)",
-      "--surface-elevated": "rgba(255, 252, 245, 0.95)",
+      "--surface-elevated": "rgba(255, 252, 245, 0.70)",
       "--border-subtle": "rgba(30, 25, 15, 0.12)",
       "--border-muted": "rgba(30, 25, 15, 0.08)",
       "--border-interactive": "rgba(30, 25, 15, 0.18)",
+      "--shadow-image": "0 24px 64px -16px rgba(0,0,0,0.1)",
     },
   },
   kinetic: {
@@ -196,10 +199,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#0C0808",
       "--accent-orange": "#4D94F7",
       "--nav-surface": "rgba(12, 10, 10, 0.92)",
-      "--surface-elevated": "rgba(18, 14, 14, 0.95)",
+      "--surface-elevated": "rgba(18, 14, 14, 0.60)",
       "--border-subtle": "rgba(168, 152, 144, 0.15)",
       "--border-muted": "rgba(168, 152, 144, 0.1)",
       "--border-interactive": "rgba(168, 152, 144, 0.2)",
+      "--shadow-image": "0 32px 80px -20px rgba(0,0,0,0.3)",
     },
     light: {
       "--background": "#F5F2EE",
@@ -215,10 +219,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#F0EAE4",
       "--accent-orange": "#1D4ED8",
       "--nav-surface": "rgba(245, 242, 238, 0.92)",
-      "--surface-elevated": "rgba(255, 252, 248, 0.95)",
+      "--surface-elevated": "rgba(255, 252, 248, 0.70)",
       "--border-subtle": "rgba(40, 20, 10, 0.12)",
       "--border-muted": "rgba(40, 20, 10, 0.08)",
       "--border-interactive": "rgba(40, 20, 10, 0.18)",
+      "--shadow-image": "0 24px 64px -16px rgba(0,0,0,0.1)",
     },
   },
   bamboo: {
@@ -236,10 +241,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#001216",
       "--accent-orange": "#F5B5CB",
       "--nav-surface": "rgba(0, 31, 36, 0.92)",
-      "--surface-elevated": "rgba(0, 38, 44, 0.95)",
+      "--surface-elevated": "rgba(0, 38, 44, 0.70)",
       "--border-subtle": "rgba(186, 149, 183, 0.15)",
       "--border-muted": "rgba(186, 149, 183, 0.1)",
       "--border-interactive": "rgba(186, 149, 183, 0.2)",
+      "--shadow-image": "0 32px 80px -20px rgba(0,0,0,0.3)",
     },
     light: {
       "--background": "#F5F0F3",
@@ -255,10 +261,11 @@ export const UI_THEMES: Record<ThemeId, Record<ModeId, UITheme>> = {
       "--jp-dark-brown": "#F0EAF0",
       "--accent-orange": "#9A5078",
       "--nav-surface": "rgba(245, 240, 243, 0.92)",
-      "--surface-elevated": "rgba(255, 250, 252, 0.95)",
+      "--surface-elevated": "rgba(255, 250, 252, 0.70)",
       "--border-subtle": "rgba(0, 31, 36, 0.12)",
       "--border-muted": "rgba(0, 31, 36, 0.08)",
       "--border-interactive": "rgba(0, 31, 36, 0.18)",
+      "--shadow-image": "0 24px 64px -16px rgba(0,0,0,0.1)",
     },
   },
 };

@@ -364,7 +364,7 @@ export default function FlowPage() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div onClick={() => setLightboxSrc("/work/flow/hierarchy.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 32px 80px -20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
+            <div onClick={() => setLightboxSrc("/work/flow/hierarchy.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
               <img
                 src="/work/flow/hierarchy.png"
                 alt="Business Processes hierarchy showing L1, L2, and L3 levels"

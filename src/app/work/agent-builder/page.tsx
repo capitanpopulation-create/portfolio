@@ -127,8 +127,8 @@ function SplitSection({
           style={{
             borderRadius: 4,
             overflow: "hidden",
-            boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: "var(--shadow-image)",
+            border: "1px solid var(--border-subtle)",
             cursor: onImageClick ? "zoom-in" : "default",
           }}
         >
@@ -362,7 +362,7 @@ export default function AgentBuilderPage() {
       <section style={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
           <Reveal>
-            <div onClick={() => setLightboxSrc("/work/agent-builder/hero.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 32px 80px -20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
+            <div onClick={() => setLightboxSrc("/work/agent-builder/hero.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
               <img
                 src="/work/agent-builder/hero.png"
                 alt="EYQ Agent Builder welcome screen"
@@ -402,7 +402,7 @@ export default function AgentBuilderPage() {
 
             {/* Image — 40% */}
             <Reveal delay={0.15} style={{ flex: "1 1 40%", minWidth: 0 }}>
-              <div onClick={() => setLightboxSrc("/work/agent-builder/wizard.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
+              <div onClick={() => setLightboxSrc("/work/agent-builder/wizard.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
                 <img
                   src="/work/agent-builder/wizard.png"
                   alt="Agent creation wizard"
@@ -531,7 +531,7 @@ export default function AgentBuilderPage() {
 
             {/* Image — 40% */}
             <Reveal delay={0.15} style={{ flex: "1 1 40%", minWidth: 0 }}>
-              <div onClick={() => setLightboxSrc("/work/agent-builder/evaluation.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
+              <div onClick={() => setLightboxSrc("/work/agent-builder/evaluation.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
                 <img
                   src="/work/agent-builder/evaluation.png"
                   alt="Evaluation results dashboard"

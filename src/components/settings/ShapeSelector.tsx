@@ -8,6 +8,7 @@ interface ShapeSelectorProps {
   accent: string;
   contrastText: string;
   onChange: (shape: ShapeId) => void;
+  id?: string;
 }
 
 const SHAPES: { id: ShapeId; label: string; icon: React.ReactNode }[] = [
@@ -40,7 +41,7 @@ const SHAPES: { id: ShapeId; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-export function ShapeSelector({ active, accent, contrastText, onChange }: ShapeSelectorProps) {
+export function ShapeSelector({ active, accent, contrastText, onChange, id = "default" }: ShapeSelectorProps) {
   return (
     <div
       className="relative flex"
@@ -69,7 +70,7 @@ export function ShapeSelector({ active, accent, contrastText, onChange }: ShapeS
         >
           {active === shape.id && (
             <motion.div
-              layoutId="shape-pill"
+              layoutId={`shape-pill-${id}`}
               className="absolute inset-0"
               style={{
                 backgroundColor: accent,

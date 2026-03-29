@@ -141,7 +141,6 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         }}
       >
         {[
-          { label: "Work", href: "/work" },
           { label: "About", href: "/about" },
         ].map((item) => (
           <Link
@@ -200,13 +199,6 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center" style={{ gap: "var(--space-10)" }}>
-            <Link
-              href="/work"
-              className="text-brown-300 hover:text-accent-orange transition-colors"
-              style={{ fontWeight: 500, transitionDuration: "var(--duration-normal)" }}
-            >
-              Work
-            </Link>
             <Link
               href="/about"
               className="text-brown-300 hover:text-accent-orange transition-colors"

@@ -67,14 +67,13 @@ export default function Home() {
       <HeroCanvas settingsRef={settingsRef} />
       <LandingOverlay
         key={colorVersion}
-        isSettingsOpen={settingsOpen}
-        onToggleSettings={toggleSettings}
         accent={accent}
         contrastText={contrastText}
       />
       <BottomPanel
         settingsRef={settingsRef}
         isExpanded={settingsOpen}
+        onToggle={toggleSettings}
       />
     </main>
   );

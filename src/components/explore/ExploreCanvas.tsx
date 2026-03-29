@@ -98,7 +98,7 @@ function Canvas() {
                 gap: 16,
                 padding: "20px 24px",
                 borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
+                border: "1px solid var(--border-subtle)",
                 background: "var(--surface-elevated)",
                 cursor: "pointer",
                 textAlign: "left",

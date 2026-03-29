@@ -28,6 +28,7 @@
   --border-subtle: rgba(210, 195, 155, 0.15);
   --border-muted: rgba(210, 195, 155, 0.1);
   --border-interactive: rgba(210, 195, 155, 0.2);
+  --shadow-image: 0 32px 80px -20px rgba(0,0,0,0.3);
 
   /* Spacing scale (4px base) */
   --space-1: 0.25rem;    /* 4px */

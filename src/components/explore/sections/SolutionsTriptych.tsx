@@ -141,7 +141,7 @@ export function SolutionsTriptych() {
               onClick={() => setExpandedPanel(isExpanded ? null : i)}
               style={{
                 borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
+                border: "1px solid var(--border-subtle)",
                 background: "var(--surface-elevated)",
                 padding: "clamp(16px, 2vw, 32px)",
                 cursor: "pointer",
@@ -205,7 +205,7 @@ export function SolutionsTriptych() {
                     style={{
                       borderRadius: 4,
                       overflow: "hidden",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid var(--border-muted)",
                       cursor: "zoom-in",
                       maxWidth: 500,
                     }}

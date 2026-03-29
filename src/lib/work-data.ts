@@ -15,7 +15,7 @@ export const PROJECTS: WorkProject[] = [
       "No approved way to build AI agents at EY. I designed the internal platform that became the standard.",
     tags: ["Case Study", "AI / ML", "Product Design"],
     href: "/work/agent-builder",
-    thumbnail: "/images/work/agent-builder-thumb.png",
+    thumbnail: "/images/work/Agent-Builder-thumbnail.png",
   },
   {
     id: "flow",
@@ -24,7 +24,7 @@ export const PROJECTS: WorkProject[] = [
       "ERP implementation was all manual. Spreadsheets, Word docs, no shared system. I built a tool that standardized the process and added AI-powered analysis.",
     tags: ["Case Study", "Enterprise", "Product Design"],
     href: "/work/flow",
-    thumbnail: "/images/work/flow-thumb.png",
+    thumbnail: "/images/work/ERP-System-thumbnail.png",
   },
 ];
 

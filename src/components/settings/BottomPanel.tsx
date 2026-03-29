@@ -27,6 +27,28 @@ const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3 + 0.8;
 interface BottomPanelProps {
   settingsRef: React.RefObject<CanvasSettings>;
   isExpanded: boolean;
+  onToggle?: () => void;
+}
+
+// Animated wave icon for the collapsed strip — "the canvas in miniature"
+function WaveIcon({ accent }: { accent: string }) {
+  // Two sine wave path variants for subtle undulation
+  const wave1 = "M0 5 C2 2, 4 2, 6 5 C8 8, 10 8, 12 5 C14 2, 16 2, 18 5 C20 8, 22 8, 24 5";
+  const wave2 = "M0 5 C2 7, 4 7, 6 5 C8 3, 10 3, 12 5 C14 7, 16 7, 18 5 C20 3, 22 3, 24 5";
+
+  return (
+    <svg width="20" height="10" viewBox="0 0 24 10" fill="none">
+      <motion.path
+        d={wave1}
+        stroke={accent}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        fill="none"
+        animate={{ d: [wave1, wave2, wave1] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </svg>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -38,11 +60,13 @@ function ThemeToggle({
   accent,
   contrastText,
   onChange,
+  id = "default",
 }: {
   active: ThemeId;
   accent: string;
   contrastText: string;
   onChange: (t: ThemeId) => void;
+  id?: string;
 }) {
   const themes: ThemeId[] = ["signal", "kinetic", "bamboo"];
 
@@ -74,7 +98,7 @@ function ThemeToggle({
         >
           {active === t && (
             <motion.div
-              layoutId="theme-pill"
+              layoutId={`theme-pill-${id}`}
               className="absolute inset-0"
               style={{
                 backgroundColor: accent,
@@ -188,7 +212,7 @@ function Divider() {
 // Bottom Panel — expandable settings only (CTAs live in LandingOverlay)
 // ---------------------------------------------------------------------------
 
-export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
+export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelProps) {
   const [, forceUpdate] = useState(0);
   const rerender = useCallback(() => forceUpdate((n) => n + 1), []);
   const [hasEntered, setHasEntered] = useState(false);
@@ -251,12 +275,40 @@ export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
             className="pointer-events-auto overflow-hidden"
             style={{
               backgroundColor: "var(--surface-elevated)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               borderTop: "1px solid var(--border-subtle)",
               boxShadow: "0 -4px 24px rgba(0,0,0,0.12)",
             }}
           >
+            {/* Collapse button — centered at top of panel */}
+            {onToggle && (
+              <div className="flex justify-center" style={{ padding: "var(--space-1) 0 0" }}>
+                <button
+                  onClick={onToggle}
+                  className="flex items-center font-[family-name:var(--font-mono)] uppercase transition-colors cursor-pointer"
+                  style={{
+                    gap: "var(--space-2)",
+                    padding: "var(--space-1) var(--space-4)",
+                    fontSize: "10px",
+                    letterSpacing: "0.1em",
+                    color: "var(--brown-400)",
+                    background: "none",
+                    border: "none",
+                    transitionDuration: "var(--duration-normal)",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--brown-400)"; }}
+                  aria-label="Collapse settings panel"
+                >
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span>Collapse</span>
+                </button>
+              </div>
+            )}
+
             {/* Desktop layout (>=1024px) */}
             <div
               className="hidden lg:flex items-center justify-center"
@@ -279,12 +331,12 @@ export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
               <Divider />
               <div>
                 <div className="font-[family-name:var(--font-mono)] uppercase text-brown-200" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Shape</div>
-                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
+                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} id="lg" />
               </div>
               <Divider />
               <div>
                 <div className="font-[family-name:var(--font-mono)] uppercase text-brown-200" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Theme</div>
-                <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+                <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} id="lg" />
               </div>
             </div>
 
@@ -302,8 +354,8 @@ export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
                   <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
                 </div>
                 <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
-                  <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
-                  <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+                  <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} id="md" />
+                  <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} id="md" />
                 </div>
               </div>
               <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
@@ -323,15 +375,68 @@ export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
             >
               <div className="flex items-center justify-between">
                 <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
+                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} id="sm" />
               </div>
-              <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+              <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} id="sm" />
               <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
                 <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
                 <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
                 <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
               </div>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Collapsed preview strip — visible when panel is closed */}
+      <AnimatePresence>
+        {!isExpanded && onToggle && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-auto flex justify-center"
+            style={{ paddingBottom: 0 }}
+          >
+            <motion.button
+              onClick={onToggle}
+              className="group flex items-center font-[family-name:var(--font-mono)] uppercase transition-all cursor-pointer"
+              animate={{ y: [0, -2, 0] }}
+              transition={{
+                y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+              }}
+              whileHover={{ y: -4 }}
+              style={{
+                gap: "var(--space-2)",
+                padding: "var(--space-2) var(--space-5)",
+                fontSize: "10px",
+                letterSpacing: "0.1em",
+                color: "var(--brown-300)",
+                backgroundColor: "var(--nav-surface)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1px solid var(--border-subtle)",
+                borderBottom: "none",
+                borderRadius: "4px 4px 0 0",
+                transitionDuration: "var(--duration-normal)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = accent;
+                e.currentTarget.style.color = accent;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-subtle)";
+                e.currentTarget.style.color = "var(--brown-300)";
+              }}
+              aria-label="Open settings panel"
+            >
+              <WaveIcon accent={accent} />
+              <span>Tweak</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="transition-transform group-hover:-translate-y-0.5" style={{ transitionDuration: "var(--duration-normal)" }}>
+                <path d="M1 5L5 1L9 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -57,8 +57,8 @@ export default function WorkPage() {
                     overflow: "hidden",
                     aspectRatio: "4/3",
                     backgroundColor: "var(--brown-600)",
-                    boxShadow: "0 32px 80px -20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    boxShadow: "var(--shadow-image)",
+                    border: "1px solid var(--border-subtle)",
                     marginBottom: 24,
                   }}
                 >

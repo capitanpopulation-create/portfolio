@@ -1,19 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { INTRO_PULSE_DURATION } from "@/lib/constants";
 const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3;
 
 interface LandingOverlayProps {
-  isSettingsOpen: boolean;
-  onToggleSettings: () => void;
   accent: string;
   contrastText: string;
 }
 
 export function LandingOverlay({
-  isSettingsOpen,
-  onToggleSettings,
   accent,
   contrastText,
 }: LandingOverlayProps) {
@@ -64,9 +61,9 @@ export function LandingOverlay({
             gap: "var(--space-3)",
           }}
         >
-          {/* Let's play — ghost/outline button */}
-          <button
-            onClick={onToggleSettings}
+          {/* Let's connect — secondary ghost button (left) */}
+          <a
+            href="mailto:hello@gabobehrens.com"
             className="group font-[family-name:var(--font-outfit)] transition-all"
             style={{
               fontSize: "13px",
@@ -77,6 +74,7 @@ export function LandingOverlay({
               backgroundColor: "transparent",
               color: "var(--brown-200)",
               cursor: "pointer",
+              textDecoration: "none",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
               display: "flex",
@@ -93,30 +91,29 @@ export function LandingOverlay({
               e.currentTarget.style.borderColor = "var(--brown-400)";
               e.currentTarget.style.color = "var(--brown-200)";
             }}
-            aria-label={isSettingsOpen ? "Close settings" : "Open settings"}
-            aria-expanded={isSettingsOpen}
           >
-            {isSettingsOpen ? (
-              <>
-                <svg width={12} height={12} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
-                  <path d="M2 2L10 10M10 2L2 10" />
-                </svg>
-                Collapse
-              </>
-            ) : (
-              <>
-                <svg width={12} height={12} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="6" cy="6" r="1.5" />
-                  <path d="M6 1v1.5M6 9.5V11M1 6h1.5M9.5 6H11M2.46 2.46l1.06 1.06M8.48 8.48l1.06 1.06M2.46 9.54l1.06-1.06M8.48 3.52l1.06-1.06" />
-                </svg>
-                Let&rsquo;s play
-              </>
-            )}
-          </button>
+            Let&rsquo;s connect
+            <svg
+              width={12}
+              height={8}
+              viewBox="0 0 12 8"
+              fill="none"
+              className="transition-transform group-hover:translate-x-1"
+              style={{ transitionDuration: "var(--duration-normal)" }}
+            >
+              <path
+                d="M1 4H10M7.5 1L11 4L7.5 7"
+                stroke="currentColor"
+                strokeWidth={1.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
 
-          {/* Let's connect — primary filled button */}
-          <a
-            href="mailto:hello@gabobehrens.com"
+          {/* See my work — primary filled button (right) */}
+          <Link
+            href="/work"
             className="group font-[family-name:var(--font-outfit)] transition-all"
             style={{
               fontSize: "13px",
@@ -144,7 +141,7 @@ export function LandingOverlay({
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            Let&rsquo;s connect
+            See my work
             <svg
               width={12}
               height={8}
@@ -161,7 +158,7 @@ export function LandingOverlay({
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </Link>
         </motion.div>
       </div>
     </div>

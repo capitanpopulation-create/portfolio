@@ -151,7 +151,7 @@ function MetricCard({
         x,
         y,
         paddingTop: 24,
-        borderTop: "1px solid rgba(255,255,255,0.1)",
+        borderTop: "1px solid var(--border-subtle)",
       }}
     >
       <p

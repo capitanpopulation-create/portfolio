@@ -111,7 +111,7 @@ export function OpportunityCards() {
                 width: "100%",
                 minHeight: 280,
                 borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
+                border: "1px solid var(--border-subtle)",
                 background: "var(--surface-elevated)",
                 padding: "clamp(24px, 4vw, 40px)",
                 display: "flex",
@@ -119,7 +119,7 @@ export function OpportunityCards() {
                 justifyContent: "center",
                 gap: 16,
                 backfaceVisibility: "hidden",
-                boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3)",
+                boxShadow: "var(--shadow-image)",
               }}
             >
               {cards[currentCard].image && (
@@ -128,7 +128,7 @@ export function OpportunityCards() {
                     borderRadius: 4,
                     overflow: "hidden",
                     marginBottom: 8,
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    border: "1px solid var(--border-muted)",
                   }}
                 >
                   <img
