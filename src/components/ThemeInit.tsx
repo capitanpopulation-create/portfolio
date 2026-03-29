@@ -4,12 +4,16 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { applyThemeVariables, type ThemeId, type ModeId } from "@/lib/canvas-settings";
 
-const VALID_THEMES: ThemeId[] = ["earth", "arctic", "kinetic", "bamboo"];
+const VALID_THEMES: ThemeId[] = ["signal", "kinetic", "bamboo"];
 const VALID_MODES: ModeId[] = ["light", "dark"];
 
 function applyCurrentTheme() {
   let rawTheme = localStorage.getItem("theme");
-  if (rawTheme === "ember") { rawTheme = "kinetic"; localStorage.setItem("theme", "kinetic"); }
+  // Migrate legacy theme names
+  if (rawTheme === "earth" || rawTheme === "arctic" || rawTheme === "ember") {
+    rawTheme = "signal";
+    localStorage.setItem("theme", "signal");
+  }
   const theme = rawTheme as ThemeId | null;
   const rawMode = localStorage.getItem("mode") as ModeId | null;
   const mode: ModeId = rawMode && VALID_MODES.includes(rawMode) ? rawMode : "dark";

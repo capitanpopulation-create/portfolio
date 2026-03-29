@@ -4,27 +4,28 @@ export interface WorkProject {
   description: string;
   tags: string[];
   href: string;
-  thumbnail?: string; // path to thumbnail image
+  thumbnail?: string;
+  comingSoon?: boolean;
 }
 
 export const PROJECTS: WorkProject[] = [
   {
-    id: "erp-integration",
-    title: "ERP Integration Tool",
-    description:
-      "Designing a seamless interface for connecting enterprise resource planning systems — simplifying complex data flows into clear, actionable workflows.",
-    tags: ["Product Design", "Enterprise", "B2B"],
-    href: "/work/erp-integration",
-    thumbnail: "/images/work/erp-integration-thumb.png",
-  },
-  {
     id: "agent-builder",
-    title: "Agent Builder Platform",
+    title: "Agent Builder",
     description:
-      "A visual platform for building and deploying AI agents — making autonomous workflows accessible through intuitive drag-and-drop composition.",
-    tags: ["Product Design", "AI / ML", "SaaS"],
+      "No approved way to build AI agents at EY. I designed the internal platform that became the standard.",
+    tags: ["Case Study", "AI / ML", "Product Design"],
     href: "/work/agent-builder",
     thumbnail: "/images/work/agent-builder-thumb.png",
+  },
+  {
+    id: "flow",
+    title: "Flow",
+    description:
+      "ERP implementation was all manual. Spreadsheets, Word docs, no shared system. I built a tool that standardized the process and added AI-powered analysis.",
+    tags: ["Case Study", "Enterprise", "Product Design"],
+    href: "/work/flow",
+    thumbnail: "/images/work/flow-thumb.png",
   },
   {
     id: "cometeer",
@@ -34,6 +35,7 @@ export const PROJECTS: WorkProject[] = [
     tags: ["Case Study", "E-Commerce", "UX Design"],
     href: "/work/cometeer",
     thumbnail: "/images/work/cometeer-thumb.png",
+    comingSoon: true,
   },
 ];
 

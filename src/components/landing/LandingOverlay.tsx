@@ -1,100 +1,168 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { INTRO_PULSE_DURATION } from "@/lib/constants";
-
 const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3;
 
-const SLIDES = [
-  {
-    heading: "Thinking hard,\nso others don\u2019t have to.",
-    tagline: "Recognizing patterns. Solving problems.",
-  },
-  {
-    heading: "No agents were harmed\nin the making of this website.",
-    tagline: "Created using Claude Code in the span of two weeks.",
-  },
-  {
-    heading: "Certainty of death.\nSmall chance of success.\nWhat are we waiting for?",
-    tagline: "\u2014 Gimli",
-  },
-  {
-    heading: "Hi, I\u2019m Gabo Behrens.",
-    tagline: "Product designer, here to help.",
-  },
-];
+interface LandingOverlayProps {
+  isSettingsOpen: boolean;
+  onToggleSettings: () => void;
+  accent: string;
+  contrastText: string;
+}
 
-const SLIDE_INTERVAL = 10000;
-
-export function LandingOverlay() {
-  const [slideIndex, setSlideIndex] = useState(0);
-  const [entranceDone, setEntranceDone] = useState(false);
-
-  // Wait for entrance animation to finish before starting rotation
-  useEffect(() => {
-    const timeout = setTimeout(
-      () => setEntranceDone(true),
-      (ENTRANCE_DELAY + 0.4 + 1.0) * 1000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
-
-  // Cycle slides once entrance is done
-  useEffect(() => {
-    if (!entranceDone) return;
-    const interval = setInterval(
-      () => setSlideIndex((i) => (i + 1) % SLIDES.length),
-      SLIDE_INTERVAL
-    );
-    return () => clearInterval(interval);
-  }, [entranceDone]);
-
-  const slide = SLIDES[slideIndex];
-  const headingLines = slide.heading.split("\n");
-
+export function LandingOverlay({
+  isSettingsOpen,
+  onToggleSettings,
+  accent,
+  contrastText,
+}: LandingOverlayProps) {
   return (
     <div
       className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center"
-      style={{ paddingBottom: 140 }}
     >
       <div className="text-center" style={{ padding: "0 var(--page-margin)" }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slideIndex}
-            initial={slideIndex === 0 ? { opacity: 0, y: 16 } : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{
-              duration: slideIndex === 0 ? 0.8 : 0.6,
-              delay: slideIndex === 0 ? ENTRANCE_DELAY : 0,
-              ease: "easeOut",
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            delay: ENTRANCE_DELAY,
+            ease: "easeOut",
+          }}
+        >
+          <h1
+            className="font-[family-name:var(--font-display)] text-limestone leading-[1.1] tracking-tight"
+            style={{ fontSize: "var(--text-display)" }}
+          >
+            Hi! I&rsquo;m Gabo Behrens
+          </h1>
+
+          <p
+            className="font-[family-name:var(--font-outfit)] text-brown-300 leading-relaxed"
+            style={{
+              fontSize: "var(--text-sm)",
+              marginTop: "var(--space-4)",
             }}
           >
-            <h1
-              className="font-[family-name:var(--font-display)] text-limestone leading-[1.1] tracking-tight"
-              style={{ fontSize: "var(--text-display)" }}
-            >
-              {headingLines.map((line, i) => (
-                <span key={i}>
-                  {i > 0 && <br />}
-                  {line}
-                </span>
-              ))}
-            </h1>
+            Product designer. I think hard so you don&rsquo;t have to.
+          </p>
+        </motion.div>
 
-            <p
-              className="font-[family-name:var(--font-mono)] text-brown-300 leading-relaxed"
-              style={{
-                fontSize: "var(--text-sm)",
-                letterSpacing: "0.04em",
-                marginTop: "var(--space-4)",
-              }}
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.6,
+            delay: ENTRANCE_DELAY + 0.4,
+            ease: "easeOut",
+          }}
+          className="pointer-events-auto flex items-center justify-center"
+          style={{
+            marginTop: "var(--space-8)",
+            gap: "var(--space-3)",
+          }}
+        >
+          {/* Let's play — ghost/outline button */}
+          <button
+            onClick={onToggleSettings}
+            className="group font-[family-name:var(--font-outfit)] transition-all"
+            style={{
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              padding: "8px 20px",
+              borderRadius: 4,
+              border: "1px solid var(--brown-400)",
+              backgroundColor: "transparent",
+              color: "var(--brown-200)",
+              cursor: "pointer",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-2)",
+              fontWeight: 600,
+              transitionDuration: "var(--duration-normal)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = accent;
+              e.currentTarget.style.color = accent;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--brown-400)";
+              e.currentTarget.style.color = "var(--brown-200)";
+            }}
+            aria-label={isSettingsOpen ? "Close settings" : "Open settings"}
+            aria-expanded={isSettingsOpen}
+          >
+            {isSettingsOpen ? (
+              <>
+                <svg width={12} height={12} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
+                  <path d="M2 2L10 10M10 2L2 10" />
+                </svg>
+                Collapse
+              </>
+            ) : (
+              <>
+                <svg width={12} height={12} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="6" cy="6" r="1.5" />
+                  <path d="M6 1v1.5M6 9.5V11M1 6h1.5M9.5 6H11M2.46 2.46l1.06 1.06M8.48 8.48l1.06 1.06M2.46 9.54l1.06-1.06M8.48 3.52l1.06-1.06" />
+                </svg>
+                Let&rsquo;s play
+              </>
+            )}
+          </button>
+
+          {/* Let's connect — primary filled button */}
+          <a
+            href="mailto:hello@gabobehrens.com"
+            className="group font-[family-name:var(--font-outfit)] transition-all"
+            style={{
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              padding: "8px 20px",
+              borderRadius: 4,
+              border: "1px solid transparent",
+              backgroundColor: accent,
+              color: contrastText,
+              cursor: "pointer",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-2)",
+              fontWeight: 600,
+              transitionDuration: "var(--duration-normal)",
+              boxShadow: `0 2px 12px ${accent}33`,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = `0 4px 20px ${accent}55`;
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = `0 2px 12px ${accent}33`;
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            Let&rsquo;s connect
+            <svg
+              width={12}
+              height={8}
+              viewBox="0 0 12 8"
+              fill="none"
+              className="transition-transform group-hover:translate-x-1"
+              style={{ transitionDuration: "var(--duration-normal)" }}
             >
-              {slide.tagline}
-            </p>
-          </motion.div>
-        </AnimatePresence>
+              <path
+                d="M1 4H10M7.5 1L11 4L7.5 7"
+                stroke="currentColor"
+                strokeWidth={1.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </motion.div>
       </div>
     </div>
   );

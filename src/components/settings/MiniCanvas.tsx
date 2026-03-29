@@ -135,7 +135,7 @@ export function MiniCanvas({ settingsRef, isActive }: MiniCanvasProps) {
       style={{
         width: MINI_SIZE,
         height: MINI_SIZE,
-        borderRadius: "var(--radius-md)",
+        borderRadius: 4,
         border: "1px solid var(--border-subtle)",
         backgroundColor: bgColor,
         flexShrink: 0,

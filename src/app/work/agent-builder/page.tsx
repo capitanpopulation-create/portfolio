@@ -3,7 +3,8 @@
 import Link from "next/link";
 /* eslint-disable @next/next/no-img-element */
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { ImageLightbox } from "@/components/work/ImageLightbox";
 
 /* ------------------------------------------------------------------ */
 /*  Brand tokens                                                       */
@@ -14,7 +15,7 @@ const brand = {
   text: "var(--foreground)",
   muted: "var(--brown-300)",
   gold: "var(--accent-orange)",
-  teal: "var(--accent-orange)",
+  cream: "var(--background)",
 };
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -50,7 +51,7 @@ function Reveal({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Split section (55/40 text + image)                                 */
+/*  Split section (60/40 text + image)                                 */
 /* ------------------------------------------------------------------ */
 function SplitSection({
   label,
@@ -59,6 +60,7 @@ function SplitSection({
   imageSrc,
   imageAlt,
   flip,
+  onImageClick,
 }: {
   label: string;
   title: string;
@@ -66,10 +68,11 @@ function SplitSection({
   imageSrc: string;
   imageAlt: string;
   flip?: boolean;
+  onImageClick?: () => void;
 }) {
   return (
     <div
-      className="cometeer-split"
+      className="ab-split"
       style={{
         display: "flex",
         gap: "clamp(32px, 5vw, 64px)",
@@ -77,7 +80,7 @@ function SplitSection({
         flexDirection: flip ? "row-reverse" : "row",
       }}
     >
-      {/* Text — 55% */}
+      {/* Text — 60% */}
       <Reveal style={{ flex: "1 1 55%", minWidth: 0 }}>
         <p
           style={{
@@ -120,11 +123,13 @@ function SplitSection({
       {/* Image — 40% */}
       <Reveal delay={0.15} style={{ flex: "1 1 40%", minWidth: 0 }}>
         <div
+          onClick={onImageClick}
           style={{
             borderRadius: 4,
             overflow: "hidden",
             boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)",
             border: "1px solid rgba(255,255,255,0.1)",
+            cursor: onImageClick ? "zoom-in" : "default",
           }}
         >
           <img
@@ -144,9 +149,129 @@ function SplitSection({
 }
 
 /* ================================================================== */
+/*  PASSWORD                                                           */
+/* ================================================================== */
+const PASSWORD = "flow2026";
+
+/* ================================================================== */
 /*  PAGE                                                               */
 /* ================================================================== */
-export default function CometeerPage() {
+export default function AgentBuilderPage() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [input, setInput] = useState("");
+  const [error, setError] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  /* ---- Password gate ---- */
+  if (!unlocked) {
+    return (
+      <main
+        style={{
+          background: brand.bg,
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease }}
+          style={{ textAlign: "center", maxWidth: 400, padding: "0 24px" }}
+        >
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 4,
+              background: brand.dark,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 24px",
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="11" width="18" height="11" rx="2" stroke={brand.gold} strokeWidth="1.5" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke={brand.gold} strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.5rem, 1.2rem + 1vw, 2rem)", color: brand.text, marginBottom: 8 }}>
+            Protected case study
+          </h1>
+          <p style={{ fontFamily: "var(--font-outfit)", fontSize: 15, color: brand.muted, marginBottom: 32, lineHeight: 1.5 }}>
+            Enter the password to view this project.
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (input === PASSWORD) {
+                setUnlocked(true);
+                setError(false);
+              } else {
+                setError(true);
+              }
+            }}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+          >
+            <input
+              type="password"
+              value={input}
+              onChange={(e) => { setInput(e.target.value); setError(false); }}
+              placeholder="Password"
+              autoFocus
+              style={{
+                fontFamily: "var(--font-outfit)",
+                fontSize: 15,
+                padding: "12px 16px",
+                borderRadius: 4,
+                border: `1px solid ${error ? "#e54d2e" : "var(--border-interactive)"}`,
+                background: "var(--surface-elevated)",
+                outline: "none",
+                color: brand.text,
+                transition: "border-color 0.2s",
+              }}
+            />
+            {error && (
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, color: "#e54d2e", textAlign: "left" }}>
+                Incorrect password. Try again.
+              </p>
+            )}
+            <button
+              type="submit"
+              style={{
+                fontFamily: "var(--font-outfit)",
+                fontSize: 15,
+                fontWeight: 600,
+                padding: "12px 24px",
+                borderRadius: 4,
+                border: "none",
+                background: brand.dark,
+                color: "var(--background)",
+                cursor: "pointer",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              View project
+            </button>
+          </form>
+          <Link
+            href="/work"
+            style={{ fontFamily: "var(--font-outfit)", fontSize: 13, color: brand.muted, textDecoration: "none", display: "inline-block", marginTop: 24, transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = brand.text)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = brand.muted)}
+          >
+            Back to work
+          </Link>
+        </motion.div>
+      </main>
+    );
+  }
+
+  /* ---- Main content ---- */
   return (
     <main style={{ background: brand.bg, minHeight: "100vh" }}>
       {/* ============================================================
@@ -170,7 +295,7 @@ export default function CometeerPage() {
                 Work
               </Link>
               <span style={{ color: brand.muted, opacity: 0.4 }}>/</span>
-              <span style={{ fontFamily: "var(--font-outfit)", fontSize: 14, fontWeight: 500, color: brand.text }}>Cometeer</span>
+              <span style={{ fontFamily: "var(--font-outfit)", fontSize: 14, fontWeight: 500, color: brand.text }}>Agent Builder</span>
             </div>
           </motion.div>
 
@@ -188,7 +313,7 @@ export default function CometeerPage() {
               maxWidth: 800,
             }}
           >
-            One-Time Purchase vs. Subscription
+            The platform we built, that got us acquired by EY
           </motion.h1>
 
           <motion.p
@@ -204,8 +329,8 @@ export default function CometeerPage() {
               marginBottom: 48,
             }}
           >
-            Redesigning Cometeer&rsquo;s checkout to let users buy coffee
-            without subscribing.
+            No approved tools to build AI agents. We designed one
+            that became the standard at EY.
           </motion.p>
 
           <motion.div
@@ -215,10 +340,10 @@ export default function CometeerPage() {
             style={{ display: "flex", gap: 48, flexWrap: "wrap" }}
           >
             {[
-              ["Role", "Product Designer"],
-              ["Company", "Cometeer"],
-              ["Timeline", "Feb 2023"],
-              ["Focus", "E-Commerce"],
+              ["Role", "Lead Product Designer"],
+              ["Company", "EYQ"],
+              ["Timeline", "2 years"],
+              ["Focus", "AI / Enterprise"],
             ].map(([label, value]) => (
               <div key={label}>
                 <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 500, color: brand.muted, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>
@@ -237,10 +362,10 @@ export default function CometeerPage() {
       <section style={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
           <Reveal>
-            <div style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 32px 80px -20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <div onClick={() => setLightboxSrc("/work/agent-builder/hero.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 32px 80px -20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
               <img
-                src="/work/cometeer/old-version-desktop.png"
-                alt="Cometeer checkout experience"
+                src="/work/agent-builder/hero.png"
+                alt="EYQ Agent Builder welcome screen"
                 style={{ width: "100%", display: "block" }}
               />
             </div>
@@ -249,43 +374,38 @@ export default function CometeerPage() {
       </section>
 
       {/* ============================================================
-          2. THE CHALLENGE
+          2. THE GAP
           ============================================================ */}
       <section style={{ padding: "80px 0", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="cometeer-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
-            {/* Text — 55% */}
+          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
+            {/* Text — 60% */}
             <Reveal style={{ flex: "1 1 55%", minWidth: 0 }}>
-              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
-                The Challenge
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+                The Opportunity
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 24, maxWidth: 500 }}>
-                The problem we saw.
+                No approved tools. Teams stuck.
               </h2>
               <div style={{ fontFamily: "var(--font-outfit)", fontSize: 16, color: brand.muted, lineHeight: 1.7, maxWidth: 480, display: "flex", flexDirection: "column", gap: 16 }}>
                 <p>
-                  Cometeer&rsquo;s checkout funneled every customer into a
-                  subscription flow. Users who wanted a single purchase had no
-                  clear path, leading to high cart abandonment among first-time
-                  buyers.
+                  External tools existed. Microsoft, startups, open-source.
+                  But nothing was approved for enterprise use. Teams wanted
+                  to build agents and had no way to do it.
                 </p>
                 <p>
-                  The business needed one-time purchases to drive trial without
-                  cannibalizing subscription revenue. Our hypothesis: if we
-                  surface one-time pricing alongside subscriptions in a single,
-                  transparent comparison component, first-time buyers will
-                  convert at a higher rate while subscription adoption remains
-                  stable.
+                  We built the internal platform. Good UX made it stick.
+                  It became the standard.
                 </p>
               </div>
             </Reveal>
 
             {/* Image — 40% */}
             <Reveal delay={0.15} style={{ flex: "1 1 40%", minWidth: 0 }}>
-              <div style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div onClick={() => setLightboxSrc("/work/agent-builder/wizard.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
                 <img
-                  src="/work/cometeer/wireframe-1.png"
-                  alt="Product hero wireframe"
+                  src="/work/agent-builder/wizard.png"
+                  alt="Agent creation wizard"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
@@ -300,58 +420,64 @@ export default function CometeerPage() {
       <section style={{ padding: "80px 0", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
           <Reveal>
-            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
               Solutions
             </p>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 64, maxWidth: 600 }}>
-              Three design moves.
+              What we shipped.
             </h2>
           </Reveal>
 
-          {/* 3A — Product Hero */}
+          {/* 3A — Simplification */}
           <div style={{ marginBottom: 80 }}>
             <SplitSection
-              label="Product Hero"
-              title="A single, reusable comparison component."
-              body="A component that lets users compare subscription vs. one-time pricing at a glance. No hidden flows, no surprise commitments. The user sees both options and picks the one that fits."
-              imageSrc="/work/cometeer/wireframe-1.png"
-              imageAlt="Product hero wireframe showing pricing comparison"
+              label="Simplification"
+              title="Agent creation went from 10 minutes to 2."
+              body="Creating an agent meant clicking through a wall of settings. We replaced it with a three-step wizard: name it, pick a pattern, add your knowledge source. Advanced options are one click away if you need them."
+              imageSrc="/work/agent-builder/wizard.png"
+              imageAlt="Agent creation wizard showing step progression"
+              onImageClick={() => setLightboxSrc("/work/agent-builder/wizard.png")}
             />
           </div>
 
-          {/* 3B — Plan Selection (flipped) */}
+          {/* 3B — Navigation (flipped) */}
           <div style={{ marginBottom: 80 }}>
             <SplitSection
-              label="Plan Selection"
-              title="Clear trade-offs. Subscription saves money, one-time is flexible."
-              body="The plan selector makes the value proposition obvious without being pushy. Subscription pricing shown alongside one-time with savings highlighted. Users self-select based on intent, not confusion."
-              imageSrc="/work/cometeer/wireframe-3.png"
-              imageAlt="Plan selection wireframe"
+              label="Navigation"
+              title="People kept getting lost. We fixed navigation."
+              body="Users with multiple tenants and workspaces couldn't tell where they were. We added breadcrumbs and a context switcher. People stopped getting lost. The pattern worked so well that Contra and TPRM reused it."
+              imageSrc="/work/agent-builder/navigation.png"
+              imageAlt="Breadcrumb tenant switcher showing hierarchy"
               flip
+              onImageClick={() => setLightboxSrc("/work/agent-builder/navigation.png")}
             />
           </div>
 
-          {/* 3C — Compare Roasts */}
+          {/* 3C — Evaluation Portal */}
           <SplitSection
-            label="Compare Roasts"
-            title="Help users choose with confidence."
-            body="A roast comparison view so users can see flavor profiles, intensity, and origin side-by-side. Reduces decision paralysis and increases average order value by helping users discover new options."
-            imageSrc="/work/cometeer/wireframe-5.png"
-            imageAlt="Compare roasts wireframe"
+            label="Evaluation Portal"
+            title="A way to test agents before they go live."
+            body="Anyone could build an agent, but developers had no way to check if it actually worked. We built a testing portal: bulk Q&A, version comparison, expected vs. actual responses. Testing became standard before anything went to production."
+            imageSrc="/work/agent-builder/evaluation.png"
+            imageAlt="Evaluation results dashboard with confidence metrics"
+            onImageClick={() => setLightboxSrc("/work/agent-builder/evaluation.png")}
           />
         </div>
       </section>
 
       {/* ============================================================
-          4. OUTCOMES — metrics
+          4. IMPACT — metrics
           ============================================================ */}
       <section style={{ padding: "80px 0", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="cometeer-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, borderTop: `1px solid ${brand.muted}30` }}>
+          <div className="ab-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, borderTop: `1px solid ${brand.muted}30` }}>
             {[
-              { metric: "+34%", label: "OTP conversion rate", note: "First-time buyer checkout completions." },
-              { metric: "0%", label: "Subscription cannibalization", note: "Subscription sign-ups held steady." },
-              { metric: "-22%", label: "Cart abandonment", note: "Checkout drop-off for new visitors." },
+              { metric: "$401M", label: "Revenue and pipeline", note: "$167M revenue. $234M pipeline. Attributed to the platform." },
+              { metric: "4K+", label: "People using it", note: "Across 7 solutions including TPRM, ValueQ, and Contract Intelligence." },
+              { metric: "3K+", label: "Agents in production", note: "Multiple versions managed and iterated. Teams building, testing, shipping." },
+              { metric: "5M+", label: "Demos and reviews run", note: "1.8B tokens processed. The platform handled the scale." },
+              { metric: "40+", label: "Collaborative workspaces", note: "Multi-tenant support across TPRM. Highest adoption, still growing." },
+              { metric: "2x", label: "Patterns reused", note: "Navigation and context switching adopted by Contra and TPRM." },
             ].map((item, i) => (
               <Reveal key={item.label} delay={0.1 * (i + 1)} style={{ paddingTop: 32 }}>
                 <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(3rem, 2.5rem + 2vw, 5rem)", color: brand.text, lineHeight: 1, letterSpacing: "-0.03em", marginBottom: 8 }}>
@@ -370,43 +496,45 @@ export default function CometeerPage() {
       </section>
 
       {/* ============================================================
-          5. LEARNINGS
+          5. LEARNINGS — split with image
           ============================================================ */}
       <section style={{ padding: "40px 0 80px", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="cometeer-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
-            {/* Text — 55% */}
+          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
+            {/* Text — 60% */}
             <Reveal style={{ flex: "1 1 55%", minWidth: 0 }}>
-              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
-                Learnings
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+                The Learnings
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 24, maxWidth: 500 }}>
-                What I learned.
+                What I&rsquo;d do differently.
               </h2>
               <div style={{ fontFamily: "var(--font-outfit)", fontSize: 16, color: brand.muted, lineHeight: 1.7, maxWidth: 480, display: "flex", flexDirection: "column", gap: 16 }}>
                 <p>
-                  Giving users a clear choice doesn&rsquo;t reduce commitment.
-                  It builds trust. The one-time path became the top acquisition
-                  channel for converting first-time buyers into eventual
-                  subscribers.
-                </p>
-                <p style={{ fontWeight: 600, color: brand.text }}>
-                  Clarity reduces friction.
+                  We built a flexible tool that could do everything but
+                  didn&rsquo;t specialize in anything. The market moved. Droid
+                  took over code generation. Microsoft&rsquo;s agent framework
+                  got approved. Teams today would use those instead.
                 </p>
                 <p>
-                  The simplest change drove the biggest result. One comparison
-                  component, placed at the right moment, eliminated the primary
-                  reason people abandoned checkout.
+                  That&rsquo;s fine. We solved a real problem at a specific
+                  moment: no approved tools, teams stuck. We made it easy to
+                  build agents when nothing else existed.
+                </p>
+                <p style={{ fontWeight: 600, color: brand.text }}>
+                  What drove adoption wasn&rsquo;t features. It was the UX.
+                  A clean interface that made ideas feel real. That&rsquo;s
+                  what unlocked $401M.
                 </p>
               </div>
             </Reveal>
 
             {/* Image — 40% */}
             <Reveal delay={0.15} style={{ flex: "1 1 40%", minWidth: 0 }}>
-              <div style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div onClick={() => setLightboxSrc("/work/agent-builder/evaluation.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "0 24px 64px -16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "zoom-in" }}>
                 <img
-                  src="/work/cometeer/wireframe-5.png"
-                  alt="Compare roasts wireframe"
+                  src="/work/agent-builder/evaluation.png"
+                  alt="Evaluation results dashboard"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
@@ -446,10 +574,17 @@ export default function CometeerPage() {
 
       <style>{`
         @media (max-width: 768px) {
-          .cometeer-split { flex-direction: column !important; }
-          .cometeer-metrics { grid-template-columns: 1fr !important; }
+          .ab-split { flex-direction: column !important; }
+          .ab-metrics { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      <ImageLightbox
+        src={lightboxSrc ?? ""}
+        alt="Enlarged view"
+        isOpen={!!lightboxSrc}
+        onClose={() => setLightboxSrc(null)}
+      />
     </main>
   );
 }

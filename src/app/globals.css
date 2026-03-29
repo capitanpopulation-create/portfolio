@@ -7,27 +7,27 @@
    ================================================================ */
 
 :root {
-  --background: #1A1410;
-  --foreground: #ECE5DA;
+  --background: #0D1117;
+  --foreground: #F0EBE0;
 
-  /* Warm earth palette */
-  --limestone: #FAF8F2;
-  --brown-100: #ECE5DA;
-  --brown-200: #DED2C2;
-  --brown-300: #D7BA9D;
-  --brown-400: #AF8462;
-  --brown-500: #936846;
-  --brown-600: #7A5638;
-  --jp-brown: #3A2206;
-  --jp-dark-brown: #221812;
-  --accent-orange: #E8722A;
+  /* Signal palette (dark navy + gold accent) */
+  --limestone: #FAF6EE;
+  --brown-100: #E8DFD0;
+  --brown-200: #D2C39B;
+  --brown-300: #B4A880;
+  --brown-400: #8C826E;
+  --brown-500: #626058;
+  --brown-600: #3A3835;
+  --jp-brown: #161820;
+  --jp-dark-brown: #0A0C12;
+  --accent-orange: #EFAA13;
 
   /* Surfaces & borders (theme-aware) */
-  --nav-surface: rgba(26, 20, 16, 0.92);
-  --surface-elevated: rgba(34, 24, 18, 0.95);
-  --border-subtle: rgba(147, 104, 70, 0.15);
-  --border-muted: rgba(147, 104, 70, 0.1);
-  --border-interactive: rgba(147, 104, 70, 0.2);
+  --nav-surface: rgba(13, 17, 23, 0.92);
+  --surface-elevated: rgba(18, 22, 30, 0.95);
+  --border-subtle: rgba(210, 195, 155, 0.15);
+  --border-muted: rgba(210, 195, 155, 0.1);
+  --border-interactive: rgba(210, 195, 155, 0.2);
 
   /* Spacing scale (4px base) */
   --space-1: 0.25rem;    /* 4px */
@@ -52,11 +52,11 @@
   --page-margin: clamp(1.5rem, 5vw, 6rem);
 
   /* Border radius */
-  --radius-xs: 2px;
+  --radius-xs: 4px;
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
   --radius-full: 9999px;
 
   /* Shadows */
@@ -215,27 +215,4 @@ body {
    SETTINGS PANEL — SLIDER
    ================================================================ */
 
-/* ================================================================
-   FORCE LIGHT MODE (for work/about pages)
-   ================================================================ */
-
-[data-force-light] {
-  --background: #F5F0EB;
-  --foreground: #1A1410;
-  --limestone: #ECE5DA;
-  --brown-100: #C7BEB2;
-  --brown-200: #A89D90;
-  --brown-300: #8A7D6E;
-  --brown-400: #6D604F;
-  --brown-500: #4A3F32;
-  --brown-600: #2C2218;
-  --jp-brown: #2C2218;
-  --jp-dark-brown: #1A1410;
-  --accent-orange: #D25F1E;
-  --nav-surface: rgba(245, 240, 235, 0.85);
-  --surface-elevated: rgba(255, 255, 255, 0.6);
-  --border-subtle: rgba(26, 20, 16, 0.12);
-  --border-muted: rgba(26, 20, 16, 0.08);
-  --border-interactive: rgba(26, 20, 16, 0.15);
-}
 

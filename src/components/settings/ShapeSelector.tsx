@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { ShapeId } from "@/lib/canvas-settings";
+import { type ShapeId } from "@/lib/canvas-settings";
 
 interface ShapeSelectorProps {
   active: ShapeId;
   accent: string;
+  contrastText: string;
   onChange: (shape: ShapeId) => void;
 }
 
@@ -39,13 +40,13 @@ const SHAPES: { id: ShapeId; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-export function ShapeSelector({ active, accent, onChange }: ShapeSelectorProps) {
+export function ShapeSelector({ active, accent, contrastText, onChange }: ShapeSelectorProps) {
   return (
     <div
       className="relative flex"
       style={{
         border: "1px solid var(--border-interactive)",
-        borderRadius: "var(--radius-md)",
+        borderRadius: 4,
         padding: 2,
         gap: 2,
       }}
@@ -57,8 +58,8 @@ export function ShapeSelector({ active, accent, onChange }: ShapeSelectorProps) 
           className="relative flex-1 flex items-center justify-center transition-colors"
           style={{
             padding: "var(--space-2)",
-            borderRadius: "calc(var(--radius-md) - 2px)",
-            color: active === shape.id ? "#fff" : "var(--brown-400)",
+            borderRadius: 4,
+            color: active === shape.id ? contrastText : "var(--brown-200)",
             position: "relative",
             zIndex: 1,
             transitionDuration: "var(--duration-normal)",
@@ -72,7 +73,7 @@ export function ShapeSelector({ active, accent, onChange }: ShapeSelectorProps) 
               className="absolute inset-0"
               style={{
                 backgroundColor: accent,
-                borderRadius: "calc(var(--radius-md) - 2px)",
+                borderRadius: 4,
                 zIndex: -1,
               }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}

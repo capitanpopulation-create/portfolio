@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   type CanvasSettings,
   type ThemeId,
@@ -9,8 +9,9 @@ import {
   type ShapeId,
   DEFAULT_SETTINGS,
   THEME_ACCENT_HEX,
-  resetSettings,
+  THEME_CONTRAST_HEX,
   applyThemeVariables,
+  getContrastText,
 } from "@/lib/canvas-settings";
 import { INTRO_PULSE_DURATION } from "@/lib/constants";
 import { PremiumSlider } from "./PremiumSlider";
@@ -25,6 +26,7 @@ const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3 + 0.8;
 
 interface BottomPanelProps {
   settingsRef: React.RefObject<CanvasSettings>;
+  isExpanded: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -34,20 +36,22 @@ interface BottomPanelProps {
 function ThemeToggle({
   active,
   accent,
+  contrastText,
   onChange,
 }: {
   active: ThemeId;
   accent: string;
+  contrastText: string;
   onChange: (t: ThemeId) => void;
 }) {
-  const themes: ThemeId[] = ["earth", "arctic", "kinetic", "bamboo"];
+  const themes: ThemeId[] = ["signal", "kinetic", "bamboo"];
 
   return (
     <div
       className="relative flex"
       style={{
         border: "1px solid var(--border-interactive)",
-        borderRadius: "var(--radius-md)",
+        borderRadius: 4,
         padding: 2,
         gap: 2,
       }}
@@ -61,8 +65,8 @@ function ThemeToggle({
             fontSize: "10px",
             letterSpacing: "0.08em",
             padding: "var(--space-1) var(--space-3)",
-            borderRadius: "calc(var(--radius-md) - 2px)",
-            color: active === t ? "#fff" : "var(--brown-400)",
+            borderRadius: 4,
+            color: active === t ? contrastText : "var(--brown-200)",
             position: "relative",
             zIndex: 1,
             transitionDuration: "var(--duration-normal)",
@@ -74,7 +78,7 @@ function ThemeToggle({
               className="absolute inset-0"
               style={{
                 backgroundColor: accent,
-                borderRadius: "calc(var(--radius-md) - 2px)",
+                borderRadius: 4,
                 zIndex: -1,
               }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -109,13 +113,12 @@ function ModeSwitch({
       style={{ gap: "var(--space-2)", userSelect: "none" }}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
-      {/* Light label */}
       <span
         className="font-[family-name:var(--font-mono)] uppercase transition-colors"
         style={{
           fontSize: "10px",
           letterSpacing: "0.08em",
-          color: !isDark ? "var(--foreground)" : "var(--brown-500)",
+          color: !isDark ? "var(--foreground)" : "var(--brown-200)",
           fontWeight: !isDark ? 500 : 400,
           transitionDuration: "var(--duration-normal)",
         }}
@@ -123,7 +126,6 @@ function ModeSwitch({
         Light
       </span>
 
-      {/* Toggle track */}
       <div
         style={{
           position: "relative",
@@ -149,13 +151,12 @@ function ModeSwitch({
         />
       </div>
 
-      {/* Dark label */}
       <span
         className="font-[family-name:var(--font-mono)] uppercase transition-colors"
         style={{
           fontSize: "10px",
           letterSpacing: "0.08em",
-          color: isDark ? "var(--foreground)" : "var(--brown-500)",
+          color: isDark ? "var(--foreground)" : "var(--brown-200)",
           fontWeight: isDark ? 500 : 400,
           transitionDuration: "var(--duration-normal)",
         }}
@@ -184,13 +185,12 @@ function Divider() {
 }
 
 // ---------------------------------------------------------------------------
-// Bottom Panel
+// Bottom Panel — expandable settings only (CTAs live in LandingOverlay)
 // ---------------------------------------------------------------------------
 
-export function BottomPanel({ settingsRef }: BottomPanelProps) {
+export function BottomPanel({ settingsRef, isExpanded }: BottomPanelProps) {
   const [, forceUpdate] = useState(0);
   const rerender = useCallback(() => forceUpdate((n) => n + 1), []);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
 
   useEffect(() => {
@@ -200,6 +200,7 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
 
   const s = settingsRef.current ?? DEFAULT_SETTINGS;
   const accent = THEME_ACCENT_HEX[s.theme][s.mode];
+  const contrastText = THEME_CONTRAST_HEX[s.theme]?.[s.mode] ?? getContrastText(accent);
 
   const update = useCallback(
     <K extends keyof CanvasSettings>(key: K, value: CanvasSettings[K]) => {
@@ -236,156 +237,104 @@ export function BottomPanel({ settingsRef }: BottomPanelProps) {
     [update, dispatchTheme, s.theme]
   );
 
+  if (!hasEntered) return null;
+
   return (
-    <motion.div
-      initial={{ y: "100%" }}
-      animate={{ y: isExpanded ? 0 : "100%" }}
-      transition={{
-        duration: 0.5,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      className="fixed bottom-0 left-0 right-0 z-50 pointer-events-auto"
-      style={{
-        visibility: hasEntered ? "visible" : "hidden",
-        backgroundColor: "var(--surface-elevated)",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
-        borderTop: "1px solid var(--border-subtle)",
-        boxShadow: "0 -4px 24px rgba(0,0,0,0.12)",
-      }}
-    >
-      {/* Floating toggle button */}
-      {hasEntered && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          style={{
-            position: "absolute",
-            top: -52,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 1,
-          }}
-        >
-          <button
-            onClick={() => setIsExpanded((prev) => !prev)}
-            className="transition-colors"
+    <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-auto overflow-hidden"
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              border: "1px solid var(--border-interactive)",
               backgroundColor: "var(--surface-elevated)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
-              transitionDuration: "var(--duration-normal)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              borderTop: "1px solid var(--border-subtle)",
+              boxShadow: "0 -4px 24px rgba(0,0,0,0.12)",
             }}
-            aria-label={isExpanded ? "Collapse settings" : "Expand settings"}
-            aria-expanded={isExpanded}
           >
-            <motion.svg
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              width={18}
-              height={18}
-              viewBox="0 0 18 18"
-              fill="none"
-              stroke="var(--brown-300)"
-              strokeWidth={1.5}
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            {/* Desktop layout (>=1024px) */}
+            <div
+              className="hidden lg:flex items-center justify-center"
+              style={{
+                maxWidth: 1200,
+                margin: "0 auto",
+                padding: "var(--space-4) var(--page-margin)",
+                gap: "var(--space-5)",
+              }}
             >
-              <path d="M4.5 11.25 L9 6.75 L13.5 11.25" />
-            </motion.svg>
-          </button>
-        </motion.div>
-      )}
-      {/* Large desktop layout (≥1024px) — single row */}
-      <div
-        className="hidden lg:flex items-center justify-center"
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "var(--space-4) var(--page-margin)",
-          gap: "var(--space-5)",
-        }}
-      >
-        <MiniCanvas settingsRef={settingsRef} isActive={true} />
-        <Divider />
-        <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-        <Divider />
-        <div className="flex items-end flex-1" style={{ gap: "var(--space-4)" }}>
-          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
-          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
-          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
-        </div>
-        <Divider />
-        <div>
-          <div className="font-[family-name:var(--font-mono)] uppercase text-brown-300" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Shape</div>
-          <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
-        </div>
-        <Divider />
-        <div>
-          <div className="font-[family-name:var(--font-mono)] uppercase text-brown-300" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Theme</div>
-          <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
-        </div>
-      </div>
+              <MiniCanvas settingsRef={settingsRef} isActive={true} />
+              <Divider />
+              <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
+              <Divider />
+              <div className="flex items-end flex-1" style={{ gap: "var(--space-4)" }}>
+                <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
+                <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
+                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+              </div>
+              <Divider />
+              <div>
+                <div className="font-[family-name:var(--font-mono)] uppercase text-brown-200" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Shape</div>
+                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
+              </div>
+              <Divider />
+              <div>
+                <div className="font-[family-name:var(--font-mono)] uppercase text-brown-200" style={{ fontSize: "10px", letterSpacing: "0.1em", marginBottom: "var(--space-2)", userSelect: "none" }}>Theme</div>
+                <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+              </div>
+            </div>
 
-      {/* Tablet layout (768px–1023px) — two rows */}
-      <div
-        className="hidden md:flex lg:hidden flex-col"
-        style={{
-          padding: "var(--space-3) var(--page-margin)",
-          gap: "var(--space-3)",
-        }}
-      >
-        {/* Row 1: Preview + Mode + Shape + Theme */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
-            <MiniCanvas settingsRef={settingsRef} isActive={true} />
-            <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-          </div>
-          <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
-            <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
-            <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
-          </div>
-        </div>
-        {/* Row 2: All sliders, full width */}
-        <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
-          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
-          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
-          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
-        </div>
-      </div>
+            {/* Tablet layout (768px–1023px) */}
+            <div
+              className="hidden md:flex lg:hidden flex-col"
+              style={{
+                padding: "var(--space-3) var(--page-margin)",
+                gap: "var(--space-3)",
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
+                  <MiniCanvas settingsRef={settingsRef} isActive={true} />
+                  <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
+                </div>
+                <div className="flex items-center" style={{ gap: "var(--space-3)" }}>
+                  <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
+                  <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+                </div>
+              </div>
+              <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
+                <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
+                <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
+                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+              </div>
+            </div>
 
-      {/* Mobile layout (<768px) — three rows, everything clear */}
-      <div
-        className="flex md:hidden flex-col"
-        style={{
-          padding: "var(--space-3) var(--page-margin)",
-          gap: "var(--space-3)",
-        }}
-      >
-        {/* Row 1: Mode + Shape */}
-        <div className="flex items-center justify-between">
-          <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
-          <ShapeSelector active={s.shape} accent={accent} onChange={(shape: ShapeId) => update("shape", shape)} />
-        </div>
-        {/* Row 2: Theme (full width) */}
-        <ThemeToggle active={s.theme} accent={accent} onChange={handleThemeChange} />
-        {/* Row 3: Sliders */}
-        <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
-          <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} onChange={(v) => update("lineCount", v)} />
-          <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} onChange={(v) => update("maxThickness", v)} />
-          <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} onChange={(v) => update("angle", v)} />
-        </div>
-      </div>
-    </motion.div>
+            {/* Mobile layout (<768px) */}
+            <div
+              className="flex md:hidden flex-col"
+              style={{
+                padding: "var(--space-3) var(--page-margin)",
+                gap: "var(--space-3)",
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <ModeSwitch mode={s.mode} accent={accent} onChange={handleModeChange} />
+                <ShapeSelector active={s.shape} accent={accent} contrastText={contrastText} onChange={(shape: ShapeId) => update("shape", shape)} />
+              </div>
+              <ThemeToggle active={s.theme} accent={accent} contrastText={contrastText} onChange={handleThemeChange} />
+              <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
+                <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
+                <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
+                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

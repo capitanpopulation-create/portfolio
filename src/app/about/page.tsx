@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 
 const FOCUS_AREAS = [
   "Product Design",
-  "AI Tools",
-  "Motion",
+  "AI Tooling",
+  "Enterprise Systems",
+  "Motion & Interaction",
 ];
 
 export default function AboutPage() {
   return (
     <main
-      data-force-light
       className="min-h-screen bg-background"
       style={{ paddingTop: "calc(var(--nav-height) + var(--space-16))" }}
     >
@@ -70,15 +70,65 @@ export default function AboutPage() {
               }}
             >
               <p>
-                Product designer focused on turning complex systems into clear,
-                usable experiences. I work at the intersection of design and
-                engineering — building interfaces that feel considered and
-                deliberate.
+                I design tools for people who have better things to do than
+                figure out software. Enterprise systems, AI platforms, complex
+                workflows. The interface is usually the bottleneck. I fix that.
               </p>
               <p className="text-brown-300" style={{ fontSize: "var(--text-base)" }}>
-                Inspired by kinetic art, architectural layers, and pattern
-                recognition. Currently interested in AI tooling, developer
-                experience, and enterprise design.
+                Before I touch a screen, I try to understand the system behind
+                it. Data flows, edge cases, the way teams actually use a tool
+                versus how it was designed to be used. The best interfaces
+                I&rsquo;ve built came from that gap.
+              </p>
+            </div>
+          </motion.section>
+
+          {/* How I Think */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            style={{ padding: "var(--space-10) 0" }}
+            className="border-b border-brown-500/15"
+          >
+            <p
+              className="font-[family-name:var(--font-mono)] uppercase text-accent-orange"
+              style={{
+                fontSize: "var(--text-xs)",
+                letterSpacing: "0.12em",
+                marginBottom: "var(--space-6)",
+              }}
+            >
+              How I Think
+            </p>
+            <div
+              className="text-brown-200 leading-relaxed"
+              style={{
+                fontSize: "var(--text-base)",
+                maxWidth: "640px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-5)",
+              }}
+            >
+              <p>
+                The best design work happens when you treat Figma like
+                a cheap experiment, not a deliverable. Explore fast, decide
+                fast, get to code. Two weeks in Figma costs less than
+                two months iterating in production.
+              </p>
+              <p className="text-brown-300">
+                I&rsquo;m drawn to kinetic art and architectural thinking.
+                Layers, rhythm, pattern recognition. These aren&rsquo;t just
+                visual preferences. They&rsquo;re how I approach information
+                architecture. Every interface has a structure underneath it.
+                I try to make that structure visible.
+              </p>
+              <p className="text-brown-300">
+                I built this site with Claude Code in two weeks.
+                Not as a flex. Designers who can work with
+                AI and code aren&rsquo;t just faster. They think differently
+                about what&rsquo;s possible.
               </p>
             </div>
           </motion.section>
@@ -87,7 +137,7 @@ export default function AboutPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             style={{ padding: "var(--space-10) 0" }}
             className="border-b border-brown-500/15"
           >
@@ -108,13 +158,13 @@ export default function AboutPage() {
               {FOCUS_AREAS.map((area) => (
                 <span
                   key={area}
-                  className="font-[family-name:var(--font-mono)] text-brown-300"
+                  className="font-[family-name:var(--font-outfit)] text-brown-300"
                   style={{
-                    fontSize: "var(--text-sm)",
-                    letterSpacing: "0.02em",
-                    padding: "var(--space-2) var(--space-4)",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    padding: "6px 14px",
                     border: "1px solid var(--border-interactive)",
-                    borderRadius: "var(--radius-md)",
+                    borderRadius: 4,
                   }}
                 >
                   {area}
@@ -122,28 +172,57 @@ export default function AboutPage() {
               ))}
             </div>
           </motion.section>
-        </div>
 
-        {/* Credits */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          style={{ padding: "var(--space-10) 0 var(--space-20)" }}
-        >
-          <div
-            className="text-brown-400 font-[family-name:var(--font-mono)]"
-            style={{
-              fontSize: "var(--text-xs)",
-              letterSpacing: "0.04em",
-              lineHeight: 1.8,
-            }}
+          {/* Contact */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            style={{ padding: "var(--space-10) 0 var(--space-20)" }}
           >
-            <p>This website has been made entirely using Claude Code.</p>
-            <p>Done in a span of two weeks.</p>
-            <p className="italic text-brown-500">No agents were harmed in the creation of this website.</p>
-          </div>
-        </motion.section>
+            <p
+              className="font-[family-name:var(--font-mono)] uppercase text-accent-orange"
+              style={{
+                fontSize: "var(--text-xs)",
+                letterSpacing: "0.12em",
+                marginBottom: "var(--space-6)",
+              }}
+            >
+              Get in Touch
+            </p>
+            <div
+              className="flex flex-col"
+              style={{ gap: "var(--space-3)" }}
+            >
+              <a
+                href="mailto:hello@gabobehrens.com"
+                className="font-[family-name:var(--font-outfit)] text-brown-200 hover:text-accent-orange transition-colors"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  transitionDuration: "var(--duration-normal)",
+                }}
+              >
+                hello@gabobehrens.com
+              </a>
+              <a
+                href="https://linkedin.com/in/gabobehrens"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-[family-name:var(--font-outfit)] text-brown-300 hover:text-accent-orange transition-colors"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  transitionDuration: "var(--duration-normal)",
+                }}
+              >
+                LinkedIn
+              </a>
+            </div>
+          </motion.section>
+        </div>
       </div>
     </main>
   );

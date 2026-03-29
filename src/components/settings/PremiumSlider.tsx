@@ -2,7 +2,6 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 interface PremiumSliderProps {
   label: string;
   value: number;
@@ -11,6 +10,7 @@ interface PremiumSliderProps {
   step: number;
   unit?: string;
   accentColor: string;
+  contrastText: string;
   onChange: (value: number) => void;
 }
 
@@ -22,6 +22,7 @@ export function PremiumSlider({
   step,
   unit = "",
   accentColor,
+  contrastText,
   onChange,
 }: PremiumSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -98,7 +99,7 @@ export function PremiumSlider({
     <div style={{ width: "100%", minWidth: 60 }}>
       {/* Label */}
       <div
-        className="font-[family-name:var(--font-mono)] uppercase text-brown-300"
+        className="font-[family-name:var(--font-mono)] uppercase text-brown-200"
         style={{
           fontSize: "10px",
           letterSpacing: "0.1em",
@@ -191,12 +192,12 @@ export function PremiumSlider({
                 bottom: "calc(100% + 4px)",
                 transform: "translateX(-50%)",
                 backgroundColor: accentColor,
-                color: "#fff",
+                color: contrastText,
                 fontSize: "11px",
                 fontFamily: "var(--font-mono)",
                 fontWeight: 500,
                 padding: "3px 8px",
-                borderRadius: 6,
+                borderRadius: 4,
                 whiteSpace: "nowrap",
                 pointerEvents: "none",
                 zIndex: 3,

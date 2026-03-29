@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gabriel Behrens — Product Designer",
+  title: "Gabriel Behrens | Product Designer",
   description:
     "Portfolio of Gabriel Behrens, product designer. Inspired by kinetic art, architectural layers, and pattern recognition.",
 };
