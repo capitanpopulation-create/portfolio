@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { useEffect } from "react";
 import { useExplore } from "../shared/explore-context";
 import { CountUpNumber } from "../shared/CountUpNumber";
@@ -130,8 +130,8 @@ function MetricCard({
 }: {
   item: (typeof metrics)[number];
   index: number;
-  mouseX: ReturnType<typeof useMotionValue>;
-  mouseY: ReturnType<typeof useMotionValue>;
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
 }) {
   // Slight parallax offset based on index
   const factor = (index % 3 - 1) * 0.5;
