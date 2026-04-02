@@ -421,22 +421,15 @@ export default function FlowPage() {
             </p>
           </Reveal>
 
-          {/* Two smaller screenshots side by side */}
-          <div className="flow-ai-shots" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 48 }}>
-            {[
-              { src: "/work/flow/ai-modal.png", alt: "Requirement analysis activity view", caption: "Activity: requirement analysis in progress" },
-              { src: "/work/flow/requirement-detail.png", alt: "Requirement analysis — low confidence review", caption: "Detail: low-confidence items routed for review" },
-            ].map((img, i) => (
-              <Reveal key={img.caption} delay={0.15 + 0.1 * i}>
-                <div onClick={() => setLightboxSrc(img.src)} style={{ borderRadius: 4, overflow: "hidden", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
-                  <img src={img.src} alt={img.alt} style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }} />
-                </div>
-                <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: "var(--brown-400)", marginTop: 12 }}>
-                  {img.caption}
-                </p>
-              </Reveal>
-            ))}
-          </div>
+          {/* AI modal screenshot */}
+          <Reveal delay={0.15}>
+            <div onClick={() => setLightboxSrc("/work/flow/fit-gap-review-summary.png")} style={{ borderRadius: 4, overflow: "hidden", border: "1px solid var(--border-subtle)", marginBottom: 48, cursor: "zoom-in" }}>
+              <img src="/work/flow/fit-gap-review-summary.png" alt="Fit-gap analysis review summary" style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }} />
+            </div>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: "var(--brown-400)", marginTop: -40, marginBottom: 48 }}>
+              Review: analysis summary and activity history
+            </p>
+          </Reveal>
 
           <Reveal delay={0.3}>
             <p
@@ -478,8 +471,8 @@ export default function FlowPage() {
 
           <div className="flow-fitgap-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
             {[
+              { src: "/work/flow/requirement-detail.png", alt: "Requirement analysis — low confidence review", caption: "Detail: low-confidence items routed for review" },
               { src: "/work/flow/edit-gap-filled.png", alt: "Edit gap fill details", caption: "Edit: fill in gap details and resolution" },
-              { src: "/work/flow/fit-gap-review-summary.png", alt: "Fit-gap analysis review summary", caption: "Review: analysis summary and activity history" },
             ].map((img, i) => (
               <Reveal key={img.caption} delay={0.15 + 0.1 * i}>
                 <div onClick={() => setLightboxSrc(img.src)} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
