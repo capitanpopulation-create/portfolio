@@ -13,21 +13,6 @@ export default function WorkPage() {
   return (
     <main className="min-h-screen bg-background" style={{ paddingTop: "var(--nav-height)" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 var(--page-margin)" }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease }}
-          style={{ paddingTop: "clamp(48px, 8vw, 96px)", paddingBottom: "clamp(32px, 5vw, 64px)" }}
-        >
-          <h1
-            className="font-[family-name:var(--font-display)] text-foreground tracking-tight"
-            style={{ fontSize: "clamp(2rem,1.5rem+2vw,3.5rem)", lineHeight: 1.05 }}
-          >
-            Selected work
-          </h1>
-        </motion.div>
-
         {/* Side-by-side project cards */}
         <div
           className="work-grid"
@@ -35,6 +20,7 @@ export default function WorkPage() {
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "clamp(24px, 4vw, 48px)",
+            paddingTop: "clamp(32px, 4vw, 48px)",
             paddingBottom: "clamp(64px, 8vw, 120px)",
           }}
         >
@@ -158,7 +144,9 @@ export default function WorkPage() {
             Interested in working together?
           </p>
           <a
-            href="mailto:hello@gabobehrens.com"
+            href="https://linkedin.com/in/gabriel-behrens-a8884955"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center font-[family-name:var(--font-outfit)] text-brown-400 hover:text-accent-orange transition-colors"
             style={{ fontSize: 13, fontWeight: 600, gap: 8, textDecoration: "none", transitionDuration: "var(--duration-normal)" }}
           >

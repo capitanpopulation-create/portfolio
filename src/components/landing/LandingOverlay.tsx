@@ -63,7 +63,9 @@ export function LandingOverlay({
         >
           {/* Let's connect — secondary ghost button (left) */}
           <a
-            href="mailto:hello@gabobehrens.com"
+            href="https://linkedin.com/in/gabriel-behrens-a8884955"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group font-[family-name:var(--font-outfit)] transition-all"
             style={{
               fontSize: "13px",

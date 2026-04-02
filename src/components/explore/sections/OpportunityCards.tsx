@@ -29,9 +29,8 @@ export function OpportunityCards() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease }}
+      animate={{ opacity: 1, transition: { duration: 0.5, ease } }}
+      exit={{ opacity: 0, transition: { duration: 0.35, ease } }}
       style={{
         position: "fixed",
         inset: 0,
@@ -103,10 +102,10 @@ export function OpportunityCards() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentCard}
-              initial={{ rotateY: 90, opacity: 0 }}
-              animate={{ rotateY: 0, opacity: 1 }}
-              exit={{ rotateY: -90, opacity: 0 }}
-              transition={{ duration: 0.5, ease }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.35, ease }}
               style={{
                 width: "100%",
                 minHeight: 280,

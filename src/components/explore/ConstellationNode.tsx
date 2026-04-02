@@ -82,8 +82,8 @@ export function ConstellationNode({
               borderRadius: "50%",
               border: "1px solid var(--accent-orange)",
             }}
-            animate={{ opacity: [0.6, 0], scale: [1, 1.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            animate={{ opacity: [0.5, 0], scale: [1, 1.25] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
           />
         )}
 

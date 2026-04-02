@@ -5,6 +5,10 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ImageLightbox } from "@/components/work/ImageLightbox";
+import { PlatformGrid } from "@/components/work/PlatformGrid";
+import { BeforeAfterSlider } from "@/components/work/BeforeAfterSlider";
+import { SolutionsTriptychInline } from "@/components/work/SolutionsTriptychInline";
+import { TenantSwitcherDemo } from "@/components/work/TenantSwitcherDemo";
 
 /* ------------------------------------------------------------------ */
 /*  Brand tokens                                                       */
@@ -148,6 +152,50 @@ function SplitSection({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Solutions section header with staggered animation                  */
+/* ------------------------------------------------------------------ */
+function SolutionsHeader() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <div ref={ref} style={{ textAlign: "center" }}>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.15, duration: 0.5, ease }}
+        style={{
+          fontFamily: "var(--font-outfit)",
+          fontSize: 12,
+          fontWeight: 600,
+          color: brand.gold,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          marginBottom: 12,
+        }}
+      >
+        Solutions
+      </motion.p>
+      <motion.h2
+        initial={{ opacity: 0, y: 16 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.2, duration: 0.6, ease }}
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(1.8rem, 1.5rem + 1.5vw, 3rem)",
+          color: brand.text,
+          lineHeight: 1.1,
+          letterSpacing: "-0.02em",
+          marginBottom: 24,
+        }}
+      >
+        What we shipped.
+      </motion.h2>
+      <div style={{ marginBottom: 48 }} />
+    </div>
+  );
+}
+
 /* ================================================================== */
 /*  PASSWORD                                                           */
 /* ================================================================== */
@@ -279,8 +327,8 @@ export default function AgentBuilderPage() {
           ============================================================ */}
       <section
         style={{
-          paddingTop: "calc(var(--nav-height) + 120px)",
-          paddingBottom: 80,
+          paddingTop: "calc(var(--nav-height) + 72px)",
+          paddingBottom: 60,
           background: brand.bg,
         }}
       >
@@ -341,7 +389,7 @@ export default function AgentBuilderPage() {
           >
             {[
               ["Role", "Lead Product Designer"],
-              ["Company", "EYQ"],
+              ["Company", "EY"],
               ["Timeline", "2 years"],
               ["Focus", "AI / Enterprise"],
             ].map(([label, value]) => (
@@ -358,14 +406,14 @@ export default function AgentBuilderPage() {
         </div>
       </section>
 
-      {/* Hero image — full width */}
-      <section style={{ paddingBottom: 80 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
+      {/* Hero image — breakout width */}
+      <section style={{ paddingBottom: 100 }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 clamp(16px, 3vw, 48px)" }}>
           <Reveal>
-            <div onClick={() => setLightboxSrc("/work/agent-builder/hero.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
+            <div onClick={() => setLightboxSrc("/work/agent-builder/hero.png")} style={{ borderRadius: 8, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.25)", cursor: "zoom-in" }}>
               <img
                 src="/work/agent-builder/hero.png"
-                alt="EYQ Agent Builder welcome screen"
+                alt="EY Agent Builder welcome screen"
                 style={{ width: "100%", display: "block" }}
               />
             </div>
@@ -376,16 +424,16 @@ export default function AgentBuilderPage() {
       {/* ============================================================
           2. THE GAP
           ============================================================ */}
-      <section style={{ padding: "80px 0", background: brand.bg }}>
+      <section style={{ padding: "60px 0 80px", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
+          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
             {/* Text — 60% */}
             <Reveal style={{ flex: "1 1 55%", minWidth: 0 }}>
-              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
                 The Opportunity
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 24, maxWidth: 500 }}>
-                No approved tools. Teams stuck.
+                No approved tools.
               </h2>
               <div style={{ fontFamily: "var(--font-outfit)", fontSize: 16, color: brand.muted, lineHeight: 1.7, maxWidth: 480, display: "flex", flexDirection: "column", gap: 16 }}>
                 <p>
@@ -417,60 +465,112 @@ export default function AgentBuilderPage() {
       {/* ============================================================
           3. SOLUTIONS
           ============================================================ */}
+      <section style={{ padding: "100px 0 80px", background: brand.bg }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
+          <SolutionsHeader />
+
+          <SolutionsTriptychInline
+            onImageClick={(src) => setLightboxSrc(src)}
+          />
+        </div>
+      </section>
+
+      {/* ============================================================
+          3A. TRY IT — interactive demo
+          ============================================================ */}
       <section style={{ padding: "80px 0", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
           <Reveal>
-            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
-              Solutions
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              Interactive
             </p>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 64, maxWidth: 600 }}>
-              What we shipped.
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16, maxWidth: 600 }}>
+              Try the navigation.
+            </h2>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 18, color: brand.muted, lineHeight: 1.6, maxWidth: 560, marginBottom: 48 }}>
+              Click any level in the breadcrumb to switch tenants, workspaces, or agents.
+            </p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <TenantSwitcherDemo />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          3B. PLATFORMS — grid
+          ============================================================ */}
+      <section style={{ padding: "80px 0", background: brand.bg }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
+          <Reveal>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              Reach
+            </p>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 48, maxWidth: 600 }}>
+              Platforms powered by agents.
             </h2>
           </Reveal>
+          <Reveal delay={0.15}>
+            <div className="ab-platforms" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+              {[
+                { name: "TPRM", src: "/work/agent-builder/tprm.png" },
+                { name: "ValueQ", src: "/work/agent-builder/value-q.png" },
+                { name: "Risk", src: "/work/agent-builder/risk.png" },
+                { name: "Contract Intelligence", src: "/work/agent-builder/contract-audit.png" },
+              ].map((p) => (
+                <div key={p.name}>
+                  <div
+                    onClick={() => setLightboxSrc(p.src)}
+                    style={{ borderRadius: 4, overflow: "hidden", cursor: "zoom-in" }}
+                  >
+                    <img
+                      src={p.src}
+                      alt={p.name}
+                      style={{ width: "100%", display: "block", aspectRatio: "16/10", objectFit: "cover", objectPosition: "top" }}
+                    />
+                  </div>
+                  <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: brand.muted, marginTop: 8 }}>
+                    {p.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
-          {/* 3A — Simplification */}
-          <div style={{ marginBottom: 80 }}>
-            <SplitSection
-              label="Simplification"
-              title="Agent creation went from 10 minutes to 2."
-              body="Creating an agent meant clicking through a wall of settings. We replaced it with a three-step wizard: name it, pick a pattern, add your knowledge source. Advanced options are one click away if you need them."
-              imageSrc="/work/agent-builder/wizard.png"
-              imageAlt="Agent creation wizard showing step progression"
-              onImageClick={() => setLightboxSrc("/work/agent-builder/wizard.png")}
+      {/* ============================================================
+          3C. EVOLUTION — before/after
+          ============================================================ */}
+      <section style={{ padding: "80px 0", background: brand.bg }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
+          <Reveal>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              Evolution
+            </p>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 48, maxWidth: 600 }}>
+              How the design evolved.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <BeforeAfterSlider
+              beforeSrc="/work/agent-builder/before.png"
+              afterSrc="/work/agent-builder/after.png"
+              beforeAlt="Early wizard design"
+              afterAlt="Final wizard design"
+              beforeLabel="V1"
+              afterLabel="Final"
             />
-          </div>
-
-          {/* 3B — Navigation (flipped) */}
-          <div style={{ marginBottom: 80 }}>
-            <SplitSection
-              label="Navigation"
-              title="People kept getting lost. We fixed navigation."
-              body="Users with multiple tenants and workspaces couldn't tell where they were. We added breadcrumbs and a context switcher. People stopped getting lost. The pattern worked so well that Contra and TPRM reused it."
-              imageSrc="/work/agent-builder/navigation.png"
-              imageAlt="Breadcrumb tenant switcher showing hierarchy"
-              flip
-              onImageClick={() => setLightboxSrc("/work/agent-builder/navigation.png")}
-            />
-          </div>
-
-          {/* 3C — Evaluation Portal */}
-          <SplitSection
-            label="Evaluation Portal"
-            title="A way to test agents before they go live."
-            body="Anyone could build an agent, but developers had no way to check if it actually worked. We built a testing portal: bulk Q&A, version comparison, expected vs. actual responses. Testing became standard before anything went to production."
-            imageSrc="/work/agent-builder/evaluation.png"
-            imageAlt="Evaluation results dashboard with confidence metrics"
-            onImageClick={() => setLightboxSrc("/work/agent-builder/evaluation.png")}
-          />
+          </Reveal>
         </div>
       </section>
 
       {/* ============================================================
           4. IMPACT — metrics
           ============================================================ */}
-      <section style={{ padding: "80px 0", background: brand.bg }}>
+      <section style={{ padding: "100px 0 80px", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="ab-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, borderTop: `1px solid ${brand.muted}30` }}>
+          <div className="ab-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 56px", borderTop: `1px solid ${brand.muted}30` }}>
             {[
               { metric: "$401M", label: "Revenue and pipeline", note: "$167M revenue. $234M pipeline. Attributed to the platform." },
               { metric: "4K+", label: "People using it", note: "Across 7 solutions including TPRM, ValueQ, and Contract Intelligence." },
@@ -479,7 +579,7 @@ export default function AgentBuilderPage() {
               { metric: "40+", label: "Collaborative workspaces", note: "Multi-tenant support across TPRM. Highest adoption, still growing." },
               { metric: "2x", label: "Patterns reused", note: "Navigation and context switching adopted by Contra and TPRM." },
             ].map((item, i) => (
-              <Reveal key={item.label} delay={0.1 * (i + 1)} style={{ paddingTop: 32 }}>
+              <Reveal key={item.label} delay={0.1 * (i + 1)} style={{ paddingTop: 40 }}>
                 <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(3rem, 2.5rem + 2vw, 5rem)", color: brand.text, lineHeight: 1, letterSpacing: "-0.03em", marginBottom: 8 }}>
                   {item.metric}
                 </p>
@@ -500,10 +600,10 @@ export default function AgentBuilderPage() {
           ============================================================ */}
       <section style={{ padding: "40px 0 80px", background: brand.bg }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)" }}>
-          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
+          <div className="ab-split" style={{ display: "flex", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
             {/* Text — 60% */}
             <Reveal style={{ flex: "1 1 55%", minWidth: 0 }}>
-              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.gold, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
                 The Learnings
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 24, maxWidth: 500 }}>
@@ -546,10 +646,11 @@ export default function AgentBuilderPage() {
       {/* ============================================================
           6. BACK
           ============================================================ */}
-      <section style={{ padding: "40px 0 120px", background: brand.bg }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)", textAlign: "center" }}>
+      <section style={{ padding: "40px 0 100px", background: brand.bg }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(24px, 5vw, 100px)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link
             href="/work"
+            className="hover:text-foreground transition-colors"
             style={{
               fontFamily: "var(--font-outfit)",
               fontSize: 14,
@@ -559,15 +660,33 @@ export default function AgentBuilderPage() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              transition: "color 0.2s ease",
+              transitionDuration: "var(--duration-normal)",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = brand.text)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = brand.muted)}
           >
             <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
               <path d="M11 4H2M5 7L1.5 4L5 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Back to all work
+          </Link>
+          <Link
+            href="/work/flow"
+            className="hover:text-accent-orange transition-colors"
+            style={{
+              fontFamily: "var(--font-outfit)",
+              fontSize: 14,
+              fontWeight: 600,
+              color: brand.muted,
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transitionDuration: "var(--duration-normal)",
+            }}
+          >
+            Next project
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 4H10M7 1L10.5 4L7 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
         </div>
       </section>
@@ -575,6 +694,7 @@ export default function AgentBuilderPage() {
       <style>{`
         @media (max-width: 768px) {
           .ab-split { flex-direction: column !important; }
+          .ab-platforms { grid-template-columns: repeat(2, 1fr) !important; }
           .ab-metrics { grid-template-columns: 1fr !important; }
         }
       `}</style>

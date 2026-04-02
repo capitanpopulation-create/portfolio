@@ -77,7 +77,7 @@ export function ShapeSelector({ active, accent, contrastText, onChange, id = "de
                 borderRadius: 4,
                 zIndex: -1,
               }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0.15 }}
             />
           )}
           {shape.icon}

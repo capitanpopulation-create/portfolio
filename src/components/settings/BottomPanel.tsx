@@ -17,6 +17,7 @@ import { INTRO_PULSE_DURATION } from "@/lib/constants";
 import { PremiumSlider } from "./PremiumSlider";
 import { ShapeSelector } from "./ShapeSelector";
 import { MiniCanvas } from "./MiniCanvas";
+import { AngleDial } from "./AngleDial";
 
 const ENTRANCE_DELAY = INTRO_PULSE_DURATION + 0.3 + 0.8;
 
@@ -105,7 +106,7 @@ function ThemeToggle({
                 borderRadius: 4,
                 zIndex: -1,
               }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0.15 }}
             />
           )}
           {t}
@@ -161,8 +162,8 @@ function ModeSwitch({
         }}
       >
         <motion.div
-          animate={{ x: isDark ? 22 : 2 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          animate={{ transform: `translateX(${isDark ? 22 : 2}px)` }}
+          transition={{ type: "spring", duration: 0.3, bounce: 0.15 }}
           style={{
             position: "absolute",
             top: 2,
@@ -268,10 +269,9 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ y: "100%" }}
+            animate={{ y: 0, transition: { duration: 0.35, ease: [0.25, 0.05, 0.55, 1.0] } }}
+            exit={{ y: "100%", transition: { duration: 0.25, ease: [0.25, 0.05, 0.55, 1.0] } }}
             className="pointer-events-auto overflow-hidden"
             style={{
               backgroundColor: "var(--surface-elevated)",
@@ -284,9 +284,10 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
             {/* Collapse button — centered at top of panel */}
             {onToggle && (
               <div className="flex justify-center" style={{ padding: "var(--space-1) 0 0" }}>
-                <button
+                <motion.button
                   onClick={onToggle}
-                  className="flex items-center font-[family-name:var(--font-mono)] uppercase transition-colors cursor-pointer"
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center font-[family-name:var(--font-mono)] uppercase cursor-pointer hover:text-accent-orange"
                   style={{
                     gap: "var(--space-2)",
                     padding: "var(--space-1) var(--space-4)",
@@ -295,17 +296,15 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
                     color: "var(--brown-400)",
                     background: "none",
                     border: "none",
-                    transitionDuration: "var(--duration-normal)",
+                    transition: "color var(--duration-normal)",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--brown-400)"; }}
                   aria-label="Collapse settings panel"
                 >
                   <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <span>Collapse</span>
-                </button>
+                </motion.button>
               </div>
             )}
 
@@ -326,7 +325,7 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
               <div className="flex items-end flex-1" style={{ gap: "var(--space-4)" }}>
                 <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
                 <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
-                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+                <AngleDial value={s.angle} step={15} accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
               </div>
               <Divider />
               <div>
@@ -361,7 +360,7 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
               <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
                 <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
                 <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
-                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+                <AngleDial value={s.angle} step={15} accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
               </div>
             </div>
 
@@ -381,7 +380,7 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
               <div className="flex items-end" style={{ gap: "var(--space-3)" }}>
                 <PremiumSlider label="Count" value={s.lineCount} min={20} max={100} step={10} accentColor={accent} contrastText={contrastText} onChange={(v) => update("lineCount", v)} />
                 <PremiumSlider label="Width" value={s.maxThickness} min={1} max={12} step={1} accentColor={accent} contrastText={contrastText} onChange={(v) => update("maxThickness", v)} />
-                <PremiumSlider label="Angle" value={s.angle} min={0} max={360} step={15} unit="°" accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
+                <AngleDial value={s.angle} step={15} accentColor={accent} contrastText={contrastText} onChange={(v) => update("angle", v)} />
               </div>
             </div>
           </motion.div>
@@ -392,21 +391,17 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
       <AnimatePresence>
         {!isExpanded && onToggle && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
             className="pointer-events-auto flex justify-center"
-            style={{ paddingBottom: 0 }}
+            style={{ paddingBottom: 0, position: "absolute", bottom: 0, left: 0, right: 0 }}
           >
             <motion.button
               onClick={onToggle}
-              className="group flex items-center font-[family-name:var(--font-mono)] uppercase transition-all cursor-pointer"
-              animate={{ y: [0, -2, 0] }}
-              transition={{
-                y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-              }}
-              whileHover={{ y: -4 }}
+              className="group flex items-center font-[family-name:var(--font-mono)] uppercase cursor-pointer hover:text-accent-orange"
+              whileTap={{ scale: 0.97 }}
               style={{
                 gap: "var(--space-2)",
                 padding: "var(--space-2) var(--space-5)",
@@ -419,15 +414,7 @@ export function BottomPanel({ settingsRef, isExpanded, onToggle }: BottomPanelPr
                 border: "1px solid var(--border-subtle)",
                 borderBottom: "none",
                 borderRadius: "4px 4px 0 0",
-                transitionDuration: "var(--duration-normal)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = accent;
-                e.currentTarget.style.color = accent;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--border-subtle)";
-                e.currentTarget.style.color = "var(--brown-300)";
+                transition: "color var(--duration-normal), border-color var(--duration-normal)",
               }}
               aria-label="Open settings panel"
             >

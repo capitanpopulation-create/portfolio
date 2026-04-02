@@ -19,7 +19,7 @@ export const PROJECTS: WorkProject[] = [
   },
   {
     id: "flow",
-    title: "Flow",
+    title: "ERP System",
     description:
       "ERP implementation was all manual. Spreadsheets, Word docs, no shared system. I built a tool that standardized the process and added AI-powered analysis.",
     tags: ["Case Study", "Enterprise", "Product Design"],

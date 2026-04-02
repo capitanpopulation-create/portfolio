@@ -29,7 +29,7 @@ export function LearningsTypewriter() {
 
     // Slow down for closing line
     const inClosing = displayedChars >= closingStart;
-    const speed = inClosing ? 30 : 15;
+    const speed = inClosing ? 20 : 15;
 
     const timer = setTimeout(() => {
       setDisplayedChars((c) => c + 1);
@@ -48,9 +48,8 @@ export function LearningsTypewriter() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease }}
+      animate={{ opacity: 1, transition: { duration: 0.5, ease } }}
+      exit={{ opacity: 0, transition: { duration: 0.35, ease } }}
       style={{
         position: "fixed",
         inset: 0,

@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
-import { useEffect } from "react";
+import { motion } from "framer-motion";
 import { useExplore } from "../shared/explore-context";
 import { CountUpNumber } from "../shared/CountUpNumber";
 
@@ -18,24 +17,12 @@ const metrics = [
 
 export function ImpactCascade() {
   const { setActiveNode } = useExplore();
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  useEffect(() => {
-    function handleMouse(e: MouseEvent) {
-      mouseX.set((e.clientX / window.innerWidth - 0.5) * 20);
-      mouseY.set((e.clientY / window.innerHeight - 0.5) * 20);
-    }
-    window.addEventListener("mousemove", handleMouse);
-    return () => window.removeEventListener("mousemove", handleMouse);
-  }, [mouseX, mouseY]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease }}
+      animate={{ opacity: 1, transition: { duration: 0.5, ease } }}
+      exit={{ opacity: 0, transition: { duration: 0.35, ease } }}
       style={{
         position: "fixed",
         inset: 0,
@@ -104,8 +91,6 @@ export function ImpactCascade() {
             key={item.label}
             item={item}
             index={i}
-            mouseX={mouseX}
-            mouseY={mouseY}
           />
         ))}
       </div>
@@ -125,31 +110,20 @@ export function ImpactCascade() {
 function MetricCard({
   item,
   index,
-  mouseX,
-  mouseY,
 }: {
   item: (typeof metrics)[number];
   index: number;
-  mouseX: MotionValue<number>;
-  mouseY: MotionValue<number>;
 }) {
-  // Slight parallax offset based on index
-  const factor = (index % 3 - 1) * 0.5;
-  const x = useTransform(mouseX, (v) => v * factor);
-  const y = useTransform(mouseY, (v) => v * factor * 0.5);
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.7,
-        delay: 0.15 * (index + 1),
+        duration: 0.6,
+        delay: 0.08 * (index + 1),
         ease,
       }}
       style={{
-        x,
-        y,
         paddingTop: 24,
         borderTop: "1px solid var(--border-subtle)",
       }}

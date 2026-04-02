@@ -11,9 +11,8 @@ export function HeroBloom() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease }}
+      animate={{ opacity: 1, transition: { duration: 0.5, ease } }}
+      exit={{ opacity: 0, transition: { duration: 0.35, ease } }}
       style={{
         position: "fixed",
         inset: 0,
@@ -62,7 +61,7 @@ export function HeroBloom() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
           style={{
             fontFamily: "var(--font-outfit)",
             fontSize: 12,
@@ -79,7 +78,7 @@ export function HeroBloom() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8, ease }}
+          transition={{ delay: 0.15, duration: 0.8, ease }}
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(2.5rem, 2rem + 3vw, 5rem)",
@@ -95,7 +94,7 @@ export function HeroBloom() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.45, duration: 0.6 }}
+          transition={{ delay: 0.25, duration: 0.6 }}
           style={{
             fontFamily: "var(--font-outfit)",
             fontSize: "clamp(1rem, 0.9rem + 0.5vw, 1.25rem)",
@@ -112,7 +111,7 @@ export function HeroBloom() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55, duration: 0.6, ease }}
+          transition={{ delay: 0.3, duration: 0.6, ease }}
           style={{
             display: "flex",
             gap: 40,
@@ -123,7 +122,7 @@ export function HeroBloom() {
         >
           {[
             ["Role", "Lead Product Designer"],
-            ["Company", "EYQ"],
+            ["Company", "EY"],
             ["Timeline", "2 years"],
             ["Focus", "AI / Enterprise"],
           ].map(([label, value]) => (
@@ -159,7 +158,7 @@ export function HeroBloom() {
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.65, duration: 0.8, ease }}
+          transition={{ delay: 0.35, duration: 0.8, ease }}
           style={{
             borderRadius: 4,
             overflow: "hidden",
@@ -169,7 +168,7 @@ export function HeroBloom() {
         >
           <img
             src="/work/agent-builder/hero.png"
-            alt="EYQ Agent Builder welcome screen"
+            alt="EY Agent Builder welcome screen"
             style={{ width: "100%", display: "block" }}
           />
         </motion.div>

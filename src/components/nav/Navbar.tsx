@@ -97,7 +97,7 @@ function AnimatedLogo() {
   );
 }
 
-function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileMenu({ open, onClose, pathname }: { open: boolean; onClose: () => void; pathname: string }) {
   if (!open) return null;
 
   return (
@@ -141,23 +141,27 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         }}
       >
         {[
+          { label: "Work", href: "/work" },
           { label: "About", href: "/about" },
-        ].map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            onClick={onClose}
-            className="text-brown-300 hover:text-accent-orange transition-colors"
-            style={{
-              padding: "var(--space-4) 0",
-              fontWeight: 500,
-              transitionDuration: "var(--duration-normal)",
-              borderBottom: "1px solid var(--border-muted)",
-            }}
-          >
-            {item.label}
-          </Link>
-        ))}
+        ].map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={onClose}
+              className={`${isActive ? "text-foreground" : "text-brown-300"} hover:text-accent-orange transition-colors`}
+              style={{
+                padding: "var(--space-4) 0",
+                fontWeight: 500,
+                transitionDuration: "var(--duration-normal)",
+                borderBottom: "1px solid var(--border-muted)",
+              }}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
@@ -199,13 +203,22 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center" style={{ gap: "var(--space-10)" }}>
-            <Link
-              href="/about"
-              className="text-brown-300 hover:text-accent-orange transition-colors"
-              style={{ fontWeight: 500, transitionDuration: "var(--duration-normal)" }}
-            >
-              About
-            </Link>
+            {[
+              { label: "Work", href: "/work" },
+              { label: "About", href: "/about" },
+            ].map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`${isActive ? "text-foreground" : "text-brown-300"} hover:text-accent-orange transition-colors`}
+                  style={{ fontWeight: 500, transitionDuration: "var(--duration-normal)" }}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Mobile hamburger */}
@@ -222,7 +235,7 @@ export function Navbar() {
         </div>
       </nav>
 
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} pathname={pathname} />
     </>
   );
 }

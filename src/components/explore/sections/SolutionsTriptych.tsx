@@ -42,9 +42,8 @@ export function SolutionsTriptych() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease }}
+      animate={{ opacity: 1, transition: { duration: 0.5, ease } }}
+      exit={{ opacity: 0, transition: { duration: 0.35, ease } }}
       style={{
         position: "fixed",
         inset: 0,
@@ -130,7 +129,6 @@ export function SolutionsTriptych() {
           return (
             <motion.div
               key={sol.id}
-              layout
               initial={{ opacity: 0, y: 30 }}
               animate={{
                 opacity: 1,

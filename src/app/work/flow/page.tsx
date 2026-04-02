@@ -276,7 +276,7 @@ export default function FlowPage() {
           >
             {[
               ["Role", "Lead Product Designer"],
-              ["Company", "CoreSystem"],
+              ["Company", "EY"],
               ["Timeline", "6 months, ongoing"],
               ["Status", "Prototype live"],
             ].map(([label, value]) => (
@@ -363,15 +363,24 @@ export default function FlowPage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.15}>
-            <div onClick={() => setLightboxSrc("/work/flow/hierarchy.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
-              <img
-                src="/work/flow/hierarchy.png"
-                alt="Business Processes hierarchy showing L1, L2, and L3 levels"
-                style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }}
-              />
-            </div>
-          </Reveal>
+          <div className="flow-hierarchy-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <Reveal delay={0.15}>
+              <div onClick={() => setLightboxSrc("/work/flow/hierarchy.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
+                <img src="/work/flow/hierarchy.png" alt="Business Processes hierarchy — L1, L2, L3 levels" style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }} />
+              </div>
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: brand.muted, marginTop: 12 }}>
+                Create and edit business processes
+              </p>
+            </Reveal>
+            <Reveal delay={0.25}>
+              <div onClick={() => setLightboxSrc("/work/flow/business-processes-import.png")} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
+                <img src="/work/flow/business-processes-import.png" alt="Business Processes import — same consistent hierarchy" style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }} />
+              </div>
+              <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: brand.muted, marginTop: 12 }}>
+                Import business processes — same consistent hierarchy
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -415,8 +424,8 @@ export default function FlowPage() {
           {/* Two smaller screenshots side by side */}
           <div className="flow-ai-shots" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 48 }}>
             {[
-              { src: "/work/flow/ai-modal.png", alt: "AI Analysis modal", caption: "Summary: one-click categorization" },
-              { src: "/work/flow/requirement-detail.png", alt: "Requirement detail", caption: "Detail: full reasoning chain" },
+              { src: "/work/flow/ai-modal.png", alt: "Requirement analysis activity view", caption: "Activity: requirement analysis in progress" },
+              { src: "/work/flow/requirement-detail.png", alt: "Requirement analysis — low confidence review", caption: "Detail: low-confidence items routed for review" },
             ].map((img, i) => (
               <Reveal key={img.caption} delay={0.15 + 0.1 * i}>
                 <div onClick={() => setLightboxSrc(img.src)} style={{ borderRadius: 4, overflow: "hidden", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
@@ -446,6 +455,42 @@ export default function FlowPage() {
               earn trust in what it is.
             </p>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          4B. FIT-GAP ANALYSIS — two images side by side
+          ============================================================ */}
+      <section style={{ padding: "0 clamp(24px, 5vw, 100px)", paddingBottom: 80 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <Reveal>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 12, fontWeight: 600, color: brand.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              Fit-Gap Analysis
+            </p>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 1.5rem + 2vw, 3.2rem)", color: brand.text, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16, maxWidth: 600 }}>
+              Edit, review, and track every gap.
+            </h2>
+            <p style={{ fontFamily: "var(--font-outfit)", fontSize: 18, color: brand.muted, lineHeight: 1.6, maxWidth: 560, marginBottom: 48 }}>
+              The fit-gap workflow lets teams edit gap details and review the full
+              analysis summary — history, activity, and resolution status in one place.
+            </p>
+          </Reveal>
+
+          <div className="flow-fitgap-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            {[
+              { src: "/work/flow/edit-gap-filled.png", alt: "Edit gap fill details", caption: "Edit: fill in gap details and resolution" },
+              { src: "/work/flow/fit-gap-review-summary.png", alt: "Fit-gap analysis review summary", caption: "Review: analysis summary and activity history" },
+            ].map((img, i) => (
+              <Reveal key={img.caption} delay={0.15 + 0.1 * i}>
+                <div onClick={() => setLightboxSrc(img.src)} style={{ borderRadius: 4, overflow: "hidden", boxShadow: "var(--shadow-image)", border: "1px solid var(--border-subtle)", cursor: "zoom-in" }}>
+                  <img src={img.src} alt={img.alt} style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }} />
+                </div>
+                <p style={{ fontFamily: "var(--font-outfit)", fontSize: 13, fontWeight: 500, color: brand.muted, marginTop: 12 }}>
+                  {img.caption}
+                </p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -545,7 +590,9 @@ export default function FlowPage() {
         @media (max-width: 768px) {
           .flow-insights-grid,
           .flow-outcomes,
-          .flow-ai-shots { grid-template-columns: 1fr !important; }
+          .flow-ai-shots,
+          .flow-hierarchy-grid,
+          .flow-fitgap-grid { grid-template-columns: 1fr !important; }
           .flow-learnings { grid-template-columns: 1fr !important; }
         }
       `}</style>
